@@ -219,11 +219,18 @@ li::before {
 }
 
 .credentials-list li {
-    margin-bottom: 12px; /* More space between credentials */
-    padding-left: 0; /* Reset padding */
+    margin-bottom: 12px;
+    padding-left: 20px; /* Add space for the bullet */
+    position: relative; /* Needed for absolute positioning of the bullet */
 }
 .credentials-list li::before {
-    content: ''; /* Remove default bullet for this list */
+    content: '•'; /* Use a standard bullet character */
+    position: absolute; /* Position the bullet precisely */
+    left: 0;          /* Align bullet to the far left */
+    top: 0px;         /* Adjust vertical alignment if needed */
+    color: #00aaff;   /* Use the accent color for the bullet */
+    font-weight: bold; /* Optional: Make the bullet bold */
+    /* Remove margin-right if using absolute positioning */
 }
 
 .credentials-list span.date {

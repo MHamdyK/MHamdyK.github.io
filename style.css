@@ -1,16 +1,35 @@
 /* Basic Reset & Font */
+:root {
+    --bg-gradient-start: #101820; /* Dark blueish */
+    --bg-gradient-end: #1a1a1a;   /* Your original dark grey */
+    --text-color: #e0e0e0;
+    --heading-color: #ffffff;
+    --accent-color: #00aaff;
+    --accent-hover-color: #007bff;
+    --card-bg-color: #2a2a2a;
+    --card-hover-bg-color: #3a3a3a; /* Added for hover */
+    --card-border-color: rgba(255, 255, 255, 0.1);
+    --subtle-text-color: #cccccc;
+    --dim-text-color: #888888;
+    --shadow-color: rgba(0, 0, 0, 0.3); /* Added for consistency */
+    --shadow-hover-color: rgba(0, 0, 0, 0.4); /* Added for consistency */
+}
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Replace the existing body style with this */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #1a1a1a; /* Dark background */
-    color: #e0e0e0; /* Light grey text */
+    /* Use the gradient defined in variables */
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-color);
     line-height: 1.7;
     font-size: 16px;
+    /* Ensure gradient covers full height */
+    min-height: 100vh;
 }
 
 /* Container for centering content */
@@ -152,20 +171,22 @@ li::before {
 }
 
 .project-card {
-    background-color: #2a2a2a; /* Slightly lighter dark card */
+    background-color: var(--card-bg-color); /* Use variable */
     padding: 25px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px var(--shadow-color); /* Use variable */
+    /* Updated transition for smoother hover effects */
+    transition: transform 0.35s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.3s ease-in-out;
     display: flex;
-    flex-direction: column; /* Stack content vertically */
-    justify-content: space-between; /* Push link/status to bottom */
-    min-height: 200px; /* Ensure cards have some height */
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
 }
 
 .project-card:hover {
-    transform: translateY(-5px); /* Subtle lift effect */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px) scale(1.02); /* Lift higher and slightly grow */
+    box-shadow: 0 12px 24px var(--shadow-hover-color); /* Stronger shadow, use variable */
+    background-color: var(--card-hover-bg-color); /* Use hover variable */
 }
 
 .project-card p {
@@ -269,6 +290,28 @@ li::before {
 a, .project-card {
     transition: all 0.3s ease-in-out;
 }
+
+
+/* Initial hidden state */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px); /* Start further down */
+    transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1); /* Smoother ease */
+    /* Prevent transition from firing on page load for elements initially in view */
+    /* will-change helps performance slightly */
+    will-change: opacity, transform;
+}
+
+/* State when element becomes visible */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.skills-grid > div.reveal.visible { transition-delay: 0.1s; }
+.projects-grid > .project-card.reveal.visible { transition-delay: 0.1s; }
+
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

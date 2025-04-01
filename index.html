@@ -9,8 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Kit -->
     <script src="https://kit.fontawesome.com/14b5afba50.js" crossorigin="anonymous"></script>
-    <!-- FAVICON LINKS-->
+    <!-- FAVICON LINKS -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -28,18 +29,22 @@
             <p class="summary">
                 Immense passion for AI, connecting theoretical foundations to real-world applications. Always excited by new technologies and innovative solutions.
             </p>
+
+            <!-- Container for interactive links and the main button -->
             <div class="social-links">
                 <a href="https://github.com/MHamdyK" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <a href="https://linkedin.com/in/mohamdyk" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                 <a href="mailto:eng.mohamed.hamdy@hotmail.com">Email</a>
-    
                 <a href="Mohamed_Hamdy_CV.pdf" download class="btn btn-primary">
                     <i class="fa-solid fa-download"></i> Download CV
-                </a>          
-                                 
-                <span>(+20) 1022028765</span>
-                <span>Cairo, Egypt</span>
+                </a>
             </div>
+
+            <!-- Separate container for static contact info -->
+            <p class="hero-contact-info">
+                <span><i class="fa-solid fa-phone"></i> (+20) 1022028765</span>
+                <span><i class="fa-solid fa-location-dot"></i> Cairo, Egypt</span>
+            </p>
         </header>
 
         <!-- ========== About Me Section ========== -->
@@ -120,7 +125,6 @@
                         <p>Integrated a multi-head AI model (classifying furniture type & estimating dimensions) into a startup's backend. Trained on Bonn Furniture Styles Dataset, optimized locally, and converted to ONNX/TFLite for real-time use.</p>
                     </div>
                     <div class="project-footer">
-                        <!-- ADDED TAGS WRAPPER -->
                         <div class="tech-tags">
                             <span class="tag">multi-head</span>
                             <span class="tag">Regression</span>
@@ -143,7 +147,6 @@
                         <p><strong>Multi-Object Tracking:</strong> Built a pedestrian tracking system using YOLOv8 (detection) and ByteTrack (tracking) on the MOT20 dataset, achieving 65% HOTA. Included custom training and hyperparameter tuning.</p>
                     </div>
                     <div class="project-footer">
-                        <!-- ADDED TAGS WRAPPER -->
                          <div class="tech-tags">
                             <span class="tag">PyTorch</span>
                             <span class="tag">CV</span>
@@ -166,7 +169,6 @@
                         <p>Built LSTM-based seq2seq models (with/without attention) in TensorFlow/Keras. Developed data preprocessing pipelines for tokenization and encoding.</p>
                     </div>
                     <div class="project-footer">
-                        <!-- ADDED TAGS WRAPPER -->
                         <div class="tech-tags">
                              <span class="tag">TensorFlow</span>
                              <span class="tag">Keras</span>
@@ -199,7 +201,6 @@
                 <p>Bachelor in Computer Engineering (Expected Jun 2025)</p>
                 <p>GPA: 3.6 / 4.0</p>
                 <p><i>Related Coursework: Introduction To Artificial Intelligence, Neural Networks, Image Processing and Pattern Recognition</i></p>
-                <!-- If you have the transcript link publicly available and want to share: -->
                 <!-- <a href="YOUR_TRANSCRIPT_LINK_HERE" target="_blank" rel="noopener noreferrer">View Transcript (Optional)</a> -->
             </div>
 
@@ -218,7 +219,7 @@
         <footer id="contact" class="section">
             <h2>Contact Me</h2>
             <p>Feel free to reach out!</p>
-            <div class="social-links">
+            <div class="social-links"> <!-- Reusing .social-links class for consistency, CSS might need adjustment if styling should differ -->
                  <a href="mailto:eng.mohamed.hamdy@hotmail.com">eng.mohamed.hamdy@hotmail.com</a>
                 <a href="https://github.com/MHamdyK" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <a href="https://linkedin.com/in/mohamdyk" target="_blank" rel="noopener noreferrer">LinkedIn</a>

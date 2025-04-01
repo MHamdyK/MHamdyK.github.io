@@ -118,7 +118,7 @@ li::before {
     color: var(--subtle-text-color);
 }
 
-/* --- Social Links & CV Button Container --- */
+/* --- Social Links & CV Button Container (MODIFIED) --- */
 .social-links {
     display: flex;
     flex-wrap: wrap;
@@ -126,6 +126,7 @@ li::before {
     align-items: center;
     gap: 15px 20px;
     margin-top: 30px;
+    margin-bottom: 0; /* REMOVED bottom margin as contact info follows */
 }
 
 /* Styling for regular links within the container */
@@ -142,14 +143,16 @@ li::before {
      transform: scale(1.1);
 }
 
-/* Styling for non-link text (phone, location) */
+/* Styling for non-link text (phone, location) - This rule is NO LONGER NEEDED as spans are outside .social-links */
+/*
 .social-links span {
     display: inline-block;
     color: var(--subtle-text-color);
     font-size: 0.95em;
 }
+*/
 
-/* ========== Button Styles ========== */
+/* ========== Button Styles (Keep As Is) ========== */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -181,6 +184,31 @@ li::before {
     font-size: 1.1em;
     line-height: 1;
 }
+
+/* --- ADDED: Styles for Separated Hero Contact Info --- */
+.hero-contact-info {
+    margin-top: 20px; /* Space below the buttons/links */
+    margin-bottom: 0; /* Reset bottom margin for paragraph */
+    font-size: 0.9em; /* Slightly smaller */
+    color: var(--dim-text-color); /* More subtle color */
+    text-align: center; /* Ensure it's centered */
+}
+
+.hero-contact-info span {
+    margin: 0 10px; /* Spacing between phone and location */
+    display: inline-flex; /* Align icon and text */
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Optional: Icon styling */
+.hero-contact-info i {
+    color: var(--subtle-text-color); /* Match text color or make slightly brighter */
+    font-size: 1em; /* Adjust icon size if needed */
+}
+/* --- End Hero Contact Info Styles --- */
+
 
 /* Skills Section */
 .skills-grid {
@@ -292,58 +320,51 @@ li::before {
 
 /* --- Project Card Footer --- */
 .project-footer {
-    padding: 15px 25px 20px 25px; /* Adjusted padding */
+    padding: 15px 25px 20px 25px;
     display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: space-between; /* Push groups apart */
+    align-items: center;
+    justify-content: space-between;
     margin-top: auto;
     min-height: 40px;
-    flex-wrap: wrap; /* Allow wrapping */
-    gap: 15px; /* Gap between tag group and status/button group */
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-/* --- ADDED: Tech Tag Styles --- */
+/* --- Tech Tag Styles --- */
 .tech-tags {
     display: flex;
-    flex-wrap: wrap; /* Allow tags to wrap */
-    gap: 6px 8px; /* Vertical and horizontal gap */
-    flex-grow: 1; /* Allow tag container to take space if needed */
-    /* Ensure tags align with baseline of status/button */
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    flex-grow: 1;
     align-items: baseline;
 }
-
 .tag {
-    background-color: var(--accent-hover-color); /* Use darker accent */
-    color: #ffffff; /* White text */
-    padding: 3px 10px; /* Padding inside tag */
-    border-radius: 12px; /* Pill shape */
-    font-size: 0.75em; /* Small font */
-    font-weight: 500; /* Medium weight */
-    white-space: nowrap; /* Prevent wrapping within tag */
-    border: 1px solid var(--accent-hover-color); /* Optional border */
-    line-height: 1.4; /* Adjust line height for better vertical centering */
+    background-color: var(--accent-hover-color);
+    color: #ffffff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid var(--accent-hover-color);
+    line-height: 1.4;
 }
-/* --- End Tech Tag Styles --- */
-
 
 /* Styles for Status/Link/Button group within Footer */
-/* Combine rules for elements that might appear on the right */
 .project-footer > .repo-status,
 .project-footer > .repo-link,
 .project-footer > .read-more-btn {
     font-size: 0.9em;
-    margin-top: 0; /* Reset margin */
-    /* margin-left: auto; */ /* Let justify-content handle spacing */
-     white-space: nowrap; /* Prevent wrapping */
+    margin-top: 0;
+    white-space: nowrap;
 }
-
 .repo-status {
     color: var(--dim-text-color);
     font-style: italic;
 }
 .repo-link {
     font-weight: bold;
-    color: var(--accent-color); /* Ensure link color */
+    color: var(--accent-color);
 }
 
 /* --- Read More Button --- */
@@ -356,9 +377,9 @@ li::before {
     padding: 4px 10px;
     font-size: 0.85em;
     border-radius: 5px;
-    display: none; /* Hidden by default, shown via JS */
+    display: none;
     transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-    margin-left: 10px; /* Space FROM link/status if on same line */
+    margin-left: 10px;
 }
 .read-more-btn:hover {
     background-color: var(--accent-color);
@@ -366,7 +387,6 @@ li::before {
     border-color: var(--accent-color);
     text-decoration: none;
 }
-
 
 /* --- GitHub Loading Message --- */
 #github-projects-loading {
@@ -413,9 +433,11 @@ li::before {
 }
 #contact h2 { display: block; border-bottom: none; margin-bottom: 20px; }
 #contact p { color: var(--subtle-text-color); }
-#contact .social-links {
+#contact .social-links { /* Reuse social links styles for footer */
     margin-top: 25px;
     margin-bottom: 30px;
+     /* Ensure footer links are also centered nicely */
+    justify-content: center;
 }
 .copyright { margin-top: 40px; font-size: 0.9em; color: var(--dim-text-color); }
 
@@ -442,32 +464,33 @@ li::before {
     .section { padding: 50px 0; }
     #hero { padding-top: 60px; }
     .social-links { gap: 10px 15px; }
-    .social-links a, .social-links span, .btn { font-size: 0.9em; }
+    .social-links a, /* Removed span from here */ .btn { font-size: 0.9em; }
+    /* Style for hero contact info on smaller screens */
+    .hero-contact-info span { font-size: 0.85em; margin: 0 5px; }
+    /* --- End hero contact info adjustment --- */
     .btn { padding: 8px 18px; }
     .project-card h4 { font-size: 1.15em; }
     .project-description p { font-size: 0.9em; }
-     /* Adjust footer layout on smaller screens */
     .project-footer {
-        justify-content: flex-start; /* Align items to start */
-         gap: 10px 15px; /* Adjust gap */
+        justify-content: flex-start;
+         gap: 10px 15px;
     }
     .tech-tags {
-        width: 100%; /* Make tags take full width */
-        margin-bottom: 10px; /* Add space below tags */
-        flex-grow: 0; /* Don't allow tags to grow */
+        width: 100%;
+        margin-bottom: 10px;
+        flex-grow: 0;
     }
-    /* Ensure status/link/button are below tags */
-     .project-footer > .repo-status,
-     .project-footer > .repo-link,
-     .project-footer > .read-more-btn {
-         width: 100%; /* Make them take full width */
-         text-align: left; /* Align text left */
-         margin-left: 0; /* Reset margin */
+    .project-footer > .repo-status,
+    .project-footer > .repo-link,
+    .project-footer > .read-more-btn {
+         width: 100%;
+         text-align: left;
+         margin-left: 0;
      }
      .read-more-btn {
-         margin-top: 5px; /* Space above button */
-         display: inline-block; /* Ensure it takes width if needed */
-         width: auto; /* Let button size itself */
+         margin-top: 5px;
+         display: inline-block;
+         width: auto;
      }
 }
 
@@ -476,8 +499,12 @@ li::before {
     h2 { font-size: 1.6em; }
     body { font-size: 15px; }
     .social-links { gap: 10px; }
-    /* Footer adjustments already made in 768px should suffice, */
-    /* but you can tweak further if needed */
-    /* .project-footer { align-items: flex-start; } */ /* Already done via flex-wrap */
-    /* .read-more-btn { margin-top: 10px; margin-left: 0; } */ /* Already done */
+    /* Further adjust hero contact info on very small screens if needed */
+     .hero-contact-info {
+         display: flex;
+         flex-direction: column; /* Stack phone and location */
+         align-items: center;
+         gap: 5px;
+     }
+     .hero-contact-info span { margin: 0; } /* Remove horizontal margin */
 }

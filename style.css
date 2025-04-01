@@ -109,7 +109,7 @@ li::before {
 #hero .tagline {
     font-size: 1.2em;
     color: var(--subtle-text-color);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-weight: 300;
 }
 #hero .summary {

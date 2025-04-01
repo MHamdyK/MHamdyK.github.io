@@ -1,0 +1,290 @@
+/* Basic Reset & Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #1a1a1a; /* Dark background */
+    color: #e0e0e0; /* Light grey text */
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+/* Container for centering content */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Section Styling */
+.section {
+    padding: 60px 0;
+    border-bottom: 1px solid #333; /* Subtle separator */
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+h1, h2, h3, h4 {
+    color: #ffffff; /* White headings */
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 3em; /* Larger for main name */
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #007bff; /* Accent color border */
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: #cccccc; /* Slightly dimmer H3 */
+    margin-top: 20px; /* Space above H3s */
+}
+
+h4 {
+     font-size: 1.1em;
+     color: #e0e0e0; /* Brighter H4 for card titles */
+     margin-bottom: 8px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+a {
+    color: #00aaff; /* Bright blue links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #007bff; /* Darker blue on hover */
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none; /* Remove default bullets */
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 8px;
+    padding-left: 15px;
+    position: relative;
+}
+/* Custom bullet */
+li::before {
+    content: '»';
+    position: absolute;
+    left: 0;
+    color: #007bff; /* Accent color bullet */
+    font-weight: bold;
+}
+
+
+/* ========== Specific Section Styles ========== */
+
+/* Hero Section */
+#hero {
+    text-align: center;
+    padding-top: 80px; /* More space at the top */
+}
+
+#hero .tagline {
+    font-size: 1.2em;
+    color: #cccccc;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+#hero .summary {
+    max-width: 700px;
+    margin: 0 auto 25px auto; /* Center summary */
+    color: #b3b3b3;
+}
+
+.social-links a,
+.social-links span {
+    margin: 0 12px;
+    display: inline-block; /* Align links/info nicely */
+    color: #cccccc; /* Lighter color for contact info */
+    font-size: 0.95em;
+}
+.social-links a {
+    color: #00aaff; /* Ensure links are distinct */
+}
+
+
+/* Skills Section */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 30px; /* Space between columns/rows */
+}
+
+.skills-grid h3 {
+    color: #00aaff; /* Accent color for skill category */
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+     margin-top: 0; /* Reset margin for grid items */
+}
+
+/* Projects Section */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid for cards */
+    gap: 25px;
+}
+
+.project-card {
+    background-color: #2a2a2a; /* Slightly lighter dark card */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between; /* Push link/status to bottom */
+    min-height: 200px; /* Ensure cards have some height */
+}
+
+.project-card:hover {
+    transform: translateY(-5px); /* Subtle lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.project-card p {
+     margin-bottom: 15px;
+     color: #c0c0c0; /* Slightly lighter paragraph text in cards */
+     flex-grow: 1; /* Allow paragraph to take available space */
+}
+
+.repo-status {
+    display: inline-block;
+    margin-top: 15px; /* Space above status/link */
+    font-style: italic;
+    color: #888; /* Dimmer color for status */
+    font-size: 0.9em;
+}
+
+.repo-link {
+    display: inline-block;
+    margin-top: 15px;
+    font-weight: bold;
+    /* background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px; */
+}
+/* .repo-link:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+} */
+
+
+#github-projects-loading {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+}
+
+/* Education & Credentials Section */
+.education-item {
+    margin-bottom: 25px;
+}
+.education-item h4 {
+    color: #e0e0e0;
+}
+.education-item p {
+     margin-bottom: 5px;
+}
+.education-item p i { /* Style for coursework */
+     color: #aaa;
+     font-size: 0.95em;
+}
+
+.credentials-list li {
+    margin-bottom: 12px; /* More space between credentials */
+    padding-left: 0; /* Reset padding */
+}
+.credentials-list li::before {
+    content: ''; /* Remove default bullet for this list */
+}
+
+.credentials-list span.date {
+    color: #888;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+.credentials-list a {
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+
+
+/* Contact Section (Footer) */
+#contact {
+    text-align: center;
+    border-bottom: none; /* No border for the last section */
+    padding-bottom: 40px; /* Less padding at the very bottom */
+}
+#contact h2 {
+    display: block; /* Center the H2 */
+    border-bottom: none;
+}
+#contact .social-links {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.copyright {
+    margin-top: 30px;
+    font-size: 0.9em;
+    color: #888;
+}
+
+/* Simple Transitions for Smoothness */
+a, .project-card {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5em;
+    }
+    h2 {
+        font-size: 1.8em;
+    }
+    .skills-grid, .projects-grid {
+        grid-template-columns: 1fr; /* Stack grids on smaller screens */
+    }
+    .container {
+        padding: 0 15px;
+    }
+    .section {
+        padding: 40px 0;
+    }
+    #hero {
+        padding-top: 50px;
+    }
+    .social-links a,
+    .social-links span {
+        margin: 5px 8px; /* Adjust spacing */
+    }
+}

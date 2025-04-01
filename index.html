@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohamed Hamdy - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Optional: Add a nice font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ========== Hero Section ========== -->
+        <header id="hero" class="section">
+            <h1>Mohamed Hamdy</h1>
+            <p class="tagline">Final-year Computer Engineering Undergraduate | Aspiring AI Engineer</p>
+            <p class="summary">
+                Immense passion for AI, connecting theoretical foundations to real-world applications. Always excited by new technologies and innovative solutions.
+            </p>
+            <div class="social-links">
+                <a href="https://github.com/MHamdyK" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://linkedin.com/in/mohamdyk" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="mailto:eng.mohamed.hamdy@hotmail.com">Email</a>
+                <span>(+20) 1022028765</span>
+                <span>Cairo, Egypt</span>
+            </div>
+        </header>
+
+        <!-- ========== About Me Section ========== -->
+        <section id="about" class="section">
+            <h2>About Me</h2>
+            <p>
+                I am a final-year Computer Engineering undergraduate at the Arab Academy for Science and Technology with an immense passion for Artificial Intelligence. I thrive on bridging the gap between theoretical concepts and practical, real-world applications. Discovering new technologies and innovative solutions constantly fuels my curiosity and leads to many "aha" moments. I'm eager to leverage my growing skills and enthusiasm in a challenging AI-focused role.
+            </p>
+        </section>
+
+        <!-- ========== Technical Skills Section ========== -->
+        <section id="skills" class="section">
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div>
+                    <h3>Languages</h3>
+                    <ul>
+                        <li>Python</li>
+                        <li>C++</li>
+                        <li>C</li>
+                        <li>C#</li>
+                        <li>Java</li>
+                        <li>Assembly x86</li>
+                        <li>VHDL</li>
+                        <li>Verilog</li>
+                        <li>SQL</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>AI / Machine Learning</h3>
+                    <ul>
+                        <li>PyTorch</li>
+                        <li>TensorFlow</li>
+                        <li>LangChain</li>
+                        <li>Neural Networks</li>
+                        <li>Image Processing</li>
+                        <li>Pattern Recognition</li>
+                        <li>Vector Databases</li>
+                         <li>ONNX / TFLite</li>
+                    </ul>
+                </div>
+                 <div>
+                    <h3>Tools & Platforms</h3>
+                    <ul>
+                        <li>Git / GitHub</li>
+                        <li>Linux</li>
+                        <li>Tableau</li>
+                        <li>Power BI</li>
+                        <li>Docker (Basic)</li>
+                        <li>Microcontrollers</li>
+                    </ul>
+                </div>
+                 <div>
+                    <h3>Concepts</h3>
+                    <ul>
+                        <li>Data Structures</li>
+                        <li>Algorithms</li>
+                        <li>Object-Oriented Programming</li>
+                        <li>Machine Learning Pipelines</li>
+                        <li>Data Augmentation</li>
+                         <li>Model Optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== Projects Showcase Section ========== -->
+        <section id="projects" class="section">
+            <h2>Projects Showcase</h2>
+
+            <h3>Highlighted Projects</h3>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h4>AI Model Development for En2ly (Startup)</h4>
+                    <p>Integrated a multi-head AI model (classifying furniture type & estimating dimensions) into a startup's backend. Trained on Bonn Furniture Styles Dataset, optimized locally, and converted to ONNX/TFLite for real-time use.</p>
+                    <span class="repo-status">Private Repository</span>
+                </div>
+                 <div class="project-card">
+                    <h4>Fawry Competition (On-going) - Phase 1 Qualified</h4>
+                    <p><strong>Face Identification:</strong> Developed a deep learning face re-id system. Fine-tuned InceptionResNetV1 (VGGFace2) with ArcMarginProduct, achieving 90% validation accuracy using custom PyTorch datasets and cosine similarity.</p>
+                     <p><strong>Multi-Object Tracking:</strong> Built a pedestrian tracking system using YOLOv8 (detection) and ByteTrack (tracking) on the MOT20 dataset, achieving 65% HOTA. Included custom training and hyperparameter tuning.</p>
+                    <span class="repo-status">Private Repository (Competition)</span>
+                </div>
+                <div class="project-card">
+                    <h4>English-Arabic Neural Machine Translation</h4>
+                    <p>Built LSTM-based seq2seq models (with/without attention) in TensorFlow/Keras. Developed data preprocessing pipelines for tokenization and encoding.</p>
+                    <a href="https://github.com/MHamdyK/Neural-Machine-Translation-Eng-Arb" target="_blank" rel="noopener noreferrer" class="repo-link">View on GitHub</a>
+                </div>
+                 <!-- Add other key projects from CV if desired -->
+
+            </div>
+
+            <h3>Other Public Repositories</h3>
+            <div id="github-projects-loading">Loading repositories from GitHub...</div>
+            <div id="github-projects" class="projects-grid">
+                <!-- GitHub repositories will be loaded here by script.js -->
+            </div>
+        </section>
+
+        <!-- ========== Education & Credentials Section ========== -->
+        <section id="education" class="section">
+            <h2>Education & Credentials</h2>
+
+            <h3>Education</h3>
+            <div class="education-item">
+                <h4>Arab Academy for Science and Technology - Faculty of Engineering</h4>
+                <p>Bachelor in Computer Engineering (Expected Jun 2025)</p>
+                <p>GPA: 3.6 / 4.0</p>
+                <p><i>Related Coursework: Introduction To Artificial Intelligence, Neural Networks, Image Processing and Pattern Recognition</i></p>
+                <!-- If you have the transcript link publicly available and want to share: -->
+                <!-- <a href="YOUR_TRANSCRIPT_LINK_HERE" target="_blank" rel="noopener noreferrer">View Transcript (Optional)</a> -->
+            </div>
+
+            <h3>Courses & Certificates</h3>
+            <ul class="credentials-list">
+                <li>DEPI (Digital Egypt Pioneers Initiative) - Google Data Analyst Specialist <span class="date">(Oct 2024 - Present)</span></li>
+                <li>Embedded Systems Engineer – AMIT Embedded Systems Course (Scholarship by Orange) <a href="https://drive.google.com/file/d/10bTU-CYnt1LvU4HfYP1UMeaV4PL-8A6H/view" target="_blank" rel="noopener noreferrer">[Certificate Link]</a> <span class="date">(Sep 2024)</span></li>
+                <li>Machine Learning Specialization (Coursera by Stanford Online & DeepLearning.AI) <span class="date">(May 2024)</span></li>
+                 <li>Zero to Mastery: Learn PyTorch for Deep Learning (Udemy) <span class="date">(Jan 2024)</span></li>
+                <li>Internet of Things (IoT) – Information Technology Institute (ITI) <a href="https://drive.google.com/file/d/1ZICPRSHaHPQSLYTx1yqL76cjwgHfmJqF/view" target="_blank" rel="noopener noreferrer">[Certificate Link]</a> <span class="date">(Sep 2022)</span></li>
+                 <!-- Add links where available by replacing YOUR_..._LINK_HERE -->
+                 <!-- If a certificate link isn't available or you don't want to share, remove the <a> tag -->
+                 <li><a href="https://drive.google.com/file/d/10bTU-CYnt1LvU4HfYP1UMeaV4PL-8A6H/view" target="_blank" rel="noopener noreferrer">Embedded Systems Engineer – AMIT Embedded Systems Course (Scholarship by Orange)</a> <span class="date">(Sep 2024)</span></li>
+                 <li>Machine Learning Specialization (Coursera by Stanford Online & DeepLearning.AI) <span class="date">(May 2024)</span></li>
+                 <li>Zero to Mastery: Learn PyTorch for Deep Learning (Udemy) <span class="date">(Jan 2024)</span></li>
+                 <li><a href="https://drive.google.com/file/d/1ZICPRSHaHPQSLYTx1yqL76cjwgHfmJqF/view" target="_blank" rel="noopener noreferrer">Internet of Things (IoT) – Information Technology Institute (ITI)</a> <span class="date">(Sep 2022)</span></li>
+            </ul>
+        </section>
+
+        <!-- ========== Contact Section ========== -->
+        <footer id="contact" class="section">
+            <h2>Contact Me</h2>
+            <p>Feel free to reach out!</p>
+            <div class="social-links">
+                 <a href="mailto:eng.mohamed.hamdy@hotmail.com">eng.mohamed.hamdy@hotmail.com</a>
+                <a href="https://github.com/MHamdyK" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://linkedin.com/in/mohamdyk" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+             <p class="copyright">© 2025 Mohamed Hamdy. All rights reserved.</p>
+        </footer>
+
+    </div> <!-- /container -->
+
+    <script src="script.js"></script>
+</body>
+</html>

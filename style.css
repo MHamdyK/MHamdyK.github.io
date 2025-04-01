@@ -187,7 +187,7 @@ li::before {
 
 /* --- ADDED: Styles for Separated Hero Contact Info --- */
 .hero-contact-info {
-    margin-top: 10px; /* Space below the buttons/links */
+    margin-top: 5px; /* Space below the buttons/links */
     margin-bottom: 0; /* Reset bottom margin for paragraph */
     font-size: 0.9em; /* Slightly smaller */
     color: var(--dim-text-color); /* More subtle color */

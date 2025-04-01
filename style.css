@@ -109,7 +109,7 @@ li::before {
 #hero .tagline {
     font-size: 1.2em;
     color: var(--subtle-text-color);
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-weight: 300;
 }
 #hero .summary {
@@ -187,7 +187,7 @@ li::before {
 
 /* --- ADDED: Styles for Separated Hero Contact Info --- */
 .hero-contact-info {
-    margin-top: 5px; /* Space below the buttons/links */
+    margin-top: 20px; /* Space below the buttons/links */
     margin-bottom: 0; /* Reset bottom margin for paragraph */
     font-size: 0.9em; /* Slightly smaller */
     color: var(--dim-text-color); /* More subtle color */

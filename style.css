@@ -120,75 +120,67 @@ li::before {
 
 /* --- Social Links & CV Button Container --- */
 .social-links {
-    display: flex; /* MODIFIED: Use flexbox */
-    flex-wrap: wrap; /* ADDED: Allow wrapping */
-    justify-content: center; /* ADDED: Center items */
-    align-items: center; /* ADDED: Vertically align items */
-    gap: 15px 20px; /* ADDED: Vertical and horizontal gap */
-    margin-top: 30px; /* ADDED: Space above */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px 20px;
+    margin-top: 30px;
 }
 
 /* Styling for regular links within the container */
-.social-links a:not(.btn) { /* Target links that are NOT buttons */
-    /* margin: 0 12px; */ /* Replaced by gap */
-    display: inline-block; /* Keep this */
-    color: var(--accent-color); /* Use variable */
+.social-links a:not(.btn) {
+    display: inline-block;
+    color: var(--accent-color);
     font-size: 0.95em;
     transition: color 0.3s ease, transform 0.3s ease;
-    transform: none; /* Explicitly remove previous scale transform if any */
+    transform: none;
 }
 .social-links a:not(.btn):hover {
-    color: var(--accent-hover-color); /* Use variable */
+    color: var(--accent-hover-color);
     text-decoration: underline;
-     transform: scale(1.1); /* Keep subtle grow on hover for links */
+     transform: scale(1.1);
 }
 
 /* Styling for non-link text (phone, location) */
 .social-links span {
-    /* margin: 0 12px; */ /* Replaced by gap */
-    display: inline-block; /* Keep this */
+    display: inline-block;
     color: var(--subtle-text-color);
     font-size: 0.95em;
 }
 
-/* ========== ADDED: Button Styles ========== */
+/* ========== Button Styles ========== */
 .btn {
-    display: inline-flex; /* Use flex to align icon and text */
+    display: inline-flex;
     align-items: center;
-    gap: 8px; /* Space between icon and text */
-    padding: 10px 22px; /* Generous padding */
-    border-radius: 8px; /* More rounded */
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95em; /* Match other links/text in hero */
-    border: 2px solid transparent; /* Border placeholder */
-    transition: all 0.3s ease; /* Smooth transition for all properties */
+    font-size: 0.95em;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
     cursor: pointer;
-    white-space: nowrap; /* Prevent button text wrapping */
+    white-space: nowrap;
 }
-
 .btn-primary {
     background-color: var(--accent-color);
-    color: #ffffff; /* Ensure high contrast text */
+    color: #ffffff;
     border-color: var(--accent-color);
 }
-
 .btn-primary:hover {
     background-color: var(--accent-hover-color);
     border-color: var(--accent-hover-color);
     color: #ffffff;
-    transform: translateY(-3px); /* Slightly more lift */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Add subtle shadow on hover */
-    text-decoration: none; /* Remove underline on hover for buttons */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
 }
-
-/* Style for the icon inside the button (if using Font Awesome) */
-.btn i { /* Targets <i> tag inside .btn */
-    font-size: 1.1em; /* Make icon slightly larger */
-    line-height: 1; /* Prevent extra spacing */
+.btn i {
+    font-size: 1.1em;
+    line-height: 1;
 }
-/* ======================================== */
-
 
 /* Skills Section */
 .skills-grid {
@@ -300,26 +292,59 @@ li::before {
 
 /* --- Project Card Footer --- */
 .project-footer {
-    padding: 10px 25px 20px 25px;
+    padding: 15px 25px 20px 25px; /* Adjusted padding */
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Push groups apart */
     margin-top: auto;
     min-height: 40px;
-    flex-wrap: wrap; /* Added for potential wrapping with tags later */
-    gap: 10px; /* Added for potential gap with tags later */
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 15px; /* Gap between tag group and status/button group */
 }
 
-/* Styles for Status/Link within Footer */
-.repo-status, .repo-link {
-    font-size: 0.9em;
-    margin-top: 0;
+/* --- ADDED: Tech Tag Styles --- */
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap; /* Allow tags to wrap */
+    gap: 6px 8px; /* Vertical and horizontal gap */
+    flex-grow: 1; /* Allow tag container to take space if needed */
+    /* Ensure tags align with baseline of status/button */
+    align-items: baseline;
 }
+
+.tag {
+    background-color: var(--accent-hover-color); /* Use darker accent */
+    color: #ffffff; /* White text */
+    padding: 3px 10px; /* Padding inside tag */
+    border-radius: 12px; /* Pill shape */
+    font-size: 0.75em; /* Small font */
+    font-weight: 500; /* Medium weight */
+    white-space: nowrap; /* Prevent wrapping within tag */
+    border: 1px solid var(--accent-hover-color); /* Optional border */
+    line-height: 1.4; /* Adjust line height for better vertical centering */
+}
+/* --- End Tech Tag Styles --- */
+
+
+/* Styles for Status/Link/Button group within Footer */
+/* Combine rules for elements that might appear on the right */
+.project-footer > .repo-status,
+.project-footer > .repo-link,
+.project-footer > .read-more-btn {
+    font-size: 0.9em;
+    margin-top: 0; /* Reset margin */
+    /* margin-left: auto; */ /* Let justify-content handle spacing */
+     white-space: nowrap; /* Prevent wrapping */
+}
+
 .repo-status {
     color: var(--dim-text-color);
     font-style: italic;
 }
-.repo-link { font-weight: bold; }
+.repo-link {
+    font-weight: bold;
+    color: var(--accent-color); /* Ensure link color */
+}
 
 /* --- Read More Button --- */
 .read-more-btn {
@@ -331,9 +356,9 @@ li::before {
     padding: 4px 10px;
     font-size: 0.85em;
     border-radius: 5px;
-    display: none;
+    display: none; /* Hidden by default, shown via JS */
     transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-    margin-left: 10px;
+    margin-left: 10px; /* Space FROM link/status if on same line */
 }
 .read-more-btn:hover {
     background-color: var(--accent-color);
@@ -341,6 +366,7 @@ li::before {
     border-color: var(--accent-color);
     text-decoration: none;
 }
+
 
 /* --- GitHub Loading Message --- */
 #github-projects-loading {
@@ -387,7 +413,7 @@ li::before {
 }
 #contact h2 { display: block; border-bottom: none; margin-bottom: 20px; }
 #contact p { color: var(--subtle-text-color); }
-#contact .social-links { /* Reuse social links styles for footer */
+#contact .social-links {
     margin-top: 25px;
     margin-bottom: 30px;
 }
@@ -415,20 +441,43 @@ li::before {
     .container { padding: 0 15px; }
     .section { padding: 50px 0; }
     #hero { padding-top: 60px; }
-    /* Adjust social links/button size and gap on smaller screens */
     .social-links { gap: 10px 15px; }
     .social-links a, .social-links span, .btn { font-size: 0.9em; }
     .btn { padding: 8px 18px; }
-    /* --- End adjustments --- */
     .project-card h4 { font-size: 1.15em; }
     .project-description p { font-size: 0.9em; }
+     /* Adjust footer layout on smaller screens */
+    .project-footer {
+        justify-content: flex-start; /* Align items to start */
+         gap: 10px 15px; /* Adjust gap */
+    }
+    .tech-tags {
+        width: 100%; /* Make tags take full width */
+        margin-bottom: 10px; /* Add space below tags */
+        flex-grow: 0; /* Don't allow tags to grow */
+    }
+    /* Ensure status/link/button are below tags */
+     .project-footer > .repo-status,
+     .project-footer > .repo-link,
+     .project-footer > .read-more-btn {
+         width: 100%; /* Make them take full width */
+         text-align: left; /* Align text left */
+         margin-left: 0; /* Reset margin */
+     }
+     .read-more-btn {
+         margin-top: 5px; /* Space above button */
+         display: inline-block; /* Ensure it takes width if needed */
+         width: auto; /* Let button size itself */
+     }
 }
 
 @media (max-width: 480px) {
     h1 { font-size: 2.2em; }
     h2 { font-size: 1.6em; }
     body { font-size: 15px; }
-    .social-links { gap: 10px; } /* Reduce gap further */
-    .project-footer { flex-direction: column; align-items: flex-start; }
-    .read-more-btn { margin-top: 10px; margin-left: 0; }
+    .social-links { gap: 10px; }
+    /* Footer adjustments already made in 768px should suffice, */
+    /* but you can tweak further if needed */
+    /* .project-footer { align-items: flex-start; } */ /* Already done via flex-wrap */
+    /* .read-more-btn { margin-top: 10px; margin-left: 0; } */ /* Already done */
 }

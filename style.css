@@ -33,7 +33,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- Smooth Scrolling (Added) --- */
+/* --- Smooth Scrolling --- */
 html {
     scroll-behavior: smooth;
 }
@@ -48,14 +48,14 @@ html {
 /* Section Styling */
 .section {
     padding: 60px 0;
-    border-bottom: 1px solid #333; /* Use a slightly darker border maybe? #282828 */
+    border-bottom: 1px solid #333;
 }
 .section:last-child {
     border-bottom: none;
 }
 
 /* Headings */
-h1, h2, h3 { /* Removed h4 from here */
+h1, h2, h3 {
     color: var(--heading-color);
     margin-bottom: 15px;
     font-weight: 600;
@@ -64,21 +64,18 @@ h1 { font-size: 3em; margin-bottom: 10px; }
 h2 {
     font-size: 2em;
     margin-bottom: 30px;
-    border-bottom: 2px solid var(--accent-hover-color); /* Use variable */
+    border-bottom: 2px solid var(--accent-hover-color);
     display: inline-block;
     padding-bottom: 5px;
 }
 h3 {
     font-size: 1.5em;
-    color: var(--subtle-text-color); /* Use variable */
+    color: var(--subtle-text-color);
     margin-top: 20px;
 }
-/* h4 handled within card styles now */
 
 /* Paragraphs & Links */
-p {
-    margin-bottom: 15px; /* Default paragraph margin */
-}
+p { margin-bottom: 15px; }
 a {
     color: var(--accent-color);
     text-decoration: none;
@@ -91,20 +88,18 @@ a:hover {
 
 /* Lists */
 ul { list-style: none; padding-left: 0; }
-
-/* Default List Item Style */
 li {
     margin-bottom: 8px;
-    padding-left: 20px; /* Adjusted padding for custom bullet */
+    padding-left: 20px;
     position: relative;
 }
 li::before {
-    content: '»'; /* Or '•' */
+    content: '»';
     position: absolute;
     left: 0;
-    color: var(--accent-color); /* Use variable */
+    color: var(--accent-color);
     font-weight: bold;
-    top: 1px; /* Fine-tune vertical alignment */
+    top: 1px;
 }
 
 /* ========== Specific Section Styles ========== */
@@ -120,23 +115,80 @@ li::before {
 #hero .summary {
     max-width: 700px;
     margin: 0 auto 25px auto;
-    color: var(--subtle-text-color); /* Use consistent variable */
+    color: var(--subtle-text-color);
 }
-.social-links a,
+
+/* --- Social Links & CV Button Container --- */
+.social-links {
+    display: flex; /* MODIFIED: Use flexbox */
+    flex-wrap: wrap; /* ADDED: Allow wrapping */
+    justify-content: center; /* ADDED: Center items */
+    align-items: center; /* ADDED: Vertically align items */
+    gap: 15px 20px; /* ADDED: Vertical and horizontal gap */
+    margin-top: 30px; /* ADDED: Space above */
+}
+
+/* Styling for regular links within the container */
+.social-links a:not(.btn) { /* Target links that are NOT buttons */
+    /* margin: 0 12px; */ /* Replaced by gap */
+    display: inline-block; /* Keep this */
+    color: var(--accent-color); /* Use variable */
+    font-size: 0.95em;
+    transition: color 0.3s ease, transform 0.3s ease;
+    transform: none; /* Explicitly remove previous scale transform if any */
+}
+.social-links a:not(.btn):hover {
+    color: var(--accent-hover-color); /* Use variable */
+    text-decoration: underline;
+     transform: scale(1.1); /* Keep subtle grow on hover for links */
+}
+
+/* Styling for non-link text (phone, location) */
 .social-links span {
-    margin: 0 12px;
-    display: inline-block;
+    /* margin: 0 12px; */ /* Replaced by gap */
+    display: inline-block; /* Keep this */
     color: var(--subtle-text-color);
     font-size: 0.95em;
 }
-.social-links a {
-    color: var(--accent-color); /* Link color */
-    transition: color 0.3s ease, transform 0.3s ease; /* Added transform */
+
+/* ========== ADDED: Button Styles ========== */
+.btn {
+    display: inline-flex; /* Use flex to align icon and text */
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    padding: 10px 22px; /* Generous padding */
+    border-radius: 8px; /* More rounded */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95em; /* Match other links/text in hero */
+    border: 2px solid transparent; /* Border placeholder */
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    cursor: pointer;
+    white-space: nowrap; /* Prevent button text wrapping */
 }
-.social-links a:hover {
-    color: var(--accent-hover-color);
-    transform: scale(1.1); /* Subtle grow on hover */
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #ffffff; /* Ensure high contrast text */
+    border-color: var(--accent-color);
 }
+
+.btn-primary:hover {
+    background-color: var(--accent-hover-color);
+    border-color: var(--accent-hover-color);
+    color: #ffffff;
+    transform: translateY(-3px); /* Slightly more lift */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Add subtle shadow on hover */
+    text-decoration: none; /* Remove underline on hover for buttons */
+}
+
+/* Style for the icon inside the button (if using Font Awesome) */
+.btn i { /* Targets <i> tag inside .btn */
+    font-size: 1.1em; /* Make icon slightly larger */
+    line-height: 1; /* Prevent extra spacing */
+}
+/* ======================================== */
+
 
 /* Skills Section */
 .skills-grid {
@@ -144,19 +196,17 @@ li::before {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 30px;
 }
-.skills-grid h3 { /* Title within skill category */
+.skills-grid h3 {
     color: var(--accent-color);
     border-bottom: 1px solid #444;
     padding-bottom: 5px;
     margin-bottom: 15px;
     margin-top: 0;
-    font-size: 1.3em; /* Adjust size if needed */
+    font-size: 1.3em;
 }
-.skills-grid ul li { /* Style list items in skills */
-     margin-bottom: 6px;
-}
-.skills-grid ul li::before { /* Maybe different bullet for skills? */
-    content: '▹'; /* Example: triangle bullet */
+.skills-grid ul li { margin-bottom: 6px; }
+.skills-grid ul li::before {
+    content: '▹';
     color: var(--accent-color);
     top: 2px;
 }
@@ -165,23 +215,22 @@ li::before {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px; /* Increased gap slightly */
+    gap: 30px;
 }
 
 /* --- Project Card Base --- */
 .project-card {
     background-color: var(--card-bg-color);
-    padding: 0; /* Padding applied to inner elements */
+    padding: 0;
     border-radius: 10px;
     box-shadow: 0 6px 12px var(--shadow-color);
-    /* Added border-color transition */
     transition: transform 0.35s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    border-top: 4px solid transparent; /* Top border for hover */
-    border-left: 4px solid transparent; /* Left border for hover */
+    border-top: 4px solid transparent;
+    border-left: 4px solid transparent;
 }
 
 /* --- Project Card Hover --- */
@@ -189,9 +238,8 @@ li::before {
     transform: translateY(-6px);
     box-shadow: 0 10px 20px var(--shadow-hover-color);
     background-color: var(--card-hover-bg-color);
-    border-top-color: var(--accent-color); /* Show top border */
-    border-left-color: var(--accent-color); /* Show left border (Corner effect) */
-    /* Update fade variable on hover if fade effect is used */
+    border-top-color: var(--accent-color);
+    border-left-color: var(--accent-color);
     --card-bg-for-fade: var(--card-hover-bg-color);
 }
 
@@ -200,46 +248,42 @@ li::before {
     padding: 20px 25px 15px 25px;
     font-size: 1.25em;
     margin: 0;
-    color: var(--heading-color); /* Ensure it uses heading color */
-    font-weight: 700; /* Make title bolder */
+    color: var(--heading-color);
+    font-weight: 700;
 }
 
 /* --- Project Description Wrapper --- */
 .project-description {
     padding: 0 25px 15px 25px;
     flex-grow: 1;
-    /* Remove transition from here, apply to paragraph for truncation */
 }
 
 /* --- Project Description Paragraph --- */
 .project-description p {
-    margin-bottom: 10px; /* Space between paragraphs if multiple */
+    margin-bottom: 10px;
     color: var(--subtle-text-color);
     font-size: 0.95em;
     line-height: 1.6;
-    /* Smooth height transition for read more/less */
     transition: max-height 0.6s ease-in-out;
 }
 .project-description p:last-child {
-     margin-bottom: 0; /* No margin on last paragraph */
+     margin-bottom: 0;
 }
 
-/* --- Text Truncation Styles (MISSING PART) --- */
+/* --- Text Truncation Styles --- */
 .project-description.truncated {
-    max-height: 100px; /* Initial max height (adjust based on font/line-height, approx 4 lines) */
-    overflow: hidden; /* Hide the overflow */
-    position: relative; /* Needed for optional fade effect */
+    max-height: 100px;
+    overflow: hidden;
+    position: relative;
 }
-/* The actual line clamping (Webkit browsers) */
 .project-description.truncated p {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 4; /* Try to show 4 lines */
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
 
-/* --- Optional Fade-Out Effect (Commented Out) --- */
-/* Uncomment this block to enable the fade-out */
+/* --- Fade-Out Effect (Commented Out) --- */
 /*
 .project-description.truncated::after {
     content: "";
@@ -254,54 +298,49 @@ li::before {
 }
 */
 
-/* --- Project Card Footer (MISSING PART) --- */
+/* --- Project Card Footer --- */
 .project-footer {
     padding: 10px 25px 20px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto; /* Pushes footer down */
-    min-height: 40px; /* Ensure footer has some height */
+    margin-top: auto;
+    min-height: 40px;
+    flex-wrap: wrap; /* Added for potential wrapping with tags later */
+    gap: 10px; /* Added for potential gap with tags later */
 }
 
 /* Styles for Status/Link within Footer */
 .repo-status, .repo-link {
     font-size: 0.9em;
-    margin-top: 0; /* Reset margin from original */
+    margin-top: 0;
 }
 .repo-status {
     color: var(--dim-text-color);
     font-style: italic;
 }
-.repo-link {
-    font-weight: bold;
-    /* Removed old background styles */
-}
-.repo-link:hover {
-    /* Keep default link hover */
-}
+.repo-link { font-weight: bold; }
 
-/* --- Read More Button (MISSING PART) --- */
+/* --- Read More Button --- */
 .read-more-btn {
     background: none;
-    border: 1px solid var(--accent-color); /* Give it a subtle border */
+    border: 1px solid var(--accent-color);
     color: var(--accent-color);
-    font-weight: 600; /* Slightly bolder */
+    font-weight: 600;
     cursor: pointer;
-    padding: 4px 10px; /* Button padding */
-    font-size: 0.85em; /* Slightly smaller */
-    border-radius: 5px; /* Rounded corners */
-    display: none; /* Hidden by default */
+    padding: 4px 10px;
+    font-size: 0.85em;
+    border-radius: 5px;
+    display: none;
     transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-    margin-left: 10px; /* Space from the repo link/status */
+    margin-left: 10px;
 }
 .read-more-btn:hover {
     background-color: var(--accent-color);
-    color: var(--bg-gradient-start); /* Dark text on hover */
+    color: var(--bg-gradient-start);
     border-color: var(--accent-color);
-    text-decoration: none; /* Remove underline on hover */
+    text-decoration: none;
 }
-
 
 /* --- GitHub Loading Message --- */
 #github-projects-loading {
@@ -321,7 +360,7 @@ li::before {
     padding-left: 20px;
     position: relative;
 }
-.credentials-list li::before { /* Use consistent bullet */
+.credentials-list li::before {
     content: '•';
     position: absolute;
     left: 0;
@@ -333,31 +372,26 @@ li::before {
     color: var(--dim-text-color);
     font-size: 0.9em;
     margin-left: 10px;
-    display: inline-block; /* Ensure proper spacing */
+    display: inline-block;
 }
-.credentials-list a { /* Link for certificate */
+.credentials-list a {
     margin-left: 5px;
     font-size: 0.9em;
-    /* Optional: Add icon */
-    /* display: inline-flex; */
-    /* align-items: center; */
 }
-/* .credentials-list a::after { */ /* Example icon */
-/*    content: ' 🔗'; */
-/* } */
-
 
 /* Contact Section (Footer) */
 #contact {
     text-align: center;
     border-bottom: none;
-    padding: 50px 0 40px 0; /* More padding above */
+    padding: 50px 0 40px 0;
 }
 #contact h2 { display: block; border-bottom: none; margin-bottom: 20px; }
 #contact p { color: var(--subtle-text-color); }
-#contact .social-links { margin-top: 25px; margin-bottom: 30px; }
+#contact .social-links { /* Reuse social links styles for footer */
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
 .copyright { margin-top: 40px; font-size: 0.9em; color: var(--dim-text-color); }
-
 
 /* --- Scroll Reveal Animation Styles --- */
 .reveal {
@@ -370,20 +404,22 @@ li::before {
     opacity: 1;
     transform: translateY(0);
 }
-/* Add slight delay for items in grids */
 .skills-grid > div.reveal.visible { transition-delay: 0.1s; }
-.projects-grid > .project-card.reveal.visible { transition-delay: 0.15s; } /* Slightly more delay */
-
+.projects-grid > .project-card.reveal.visible { transition-delay: 0.15s; }
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
     h1 { font-size: 2.5em; }
     h2 { font-size: 1.8em; }
-    .skills-grid, .projects-grid { grid-template-columns: 1fr; } /* Stack grids */
+    .skills-grid, .projects-grid { grid-template-columns: 1fr; }
     .container { padding: 0 15px; }
     .section { padding: 50px 0; }
     #hero { padding-top: 60px; }
-    .social-links a, .social-links span { margin: 8px 8px; font-size: 0.9em; } /* Adjust spacing */
+    /* Adjust social links/button size and gap on smaller screens */
+    .social-links { gap: 10px 15px; }
+    .social-links a, .social-links span, .btn { font-size: 0.9em; }
+    .btn { padding: 8px 18px; }
+    /* --- End adjustments --- */
     .project-card h4 { font-size: 1.15em; }
     .project-description p { font-size: 0.9em; }
 }
@@ -392,7 +428,7 @@ li::before {
     h1 { font-size: 2.2em; }
     h2 { font-size: 1.6em; }
     body { font-size: 15px; }
-    .social-links a, .social-links span { margin: 6px 5px; }
-    .project-footer { flex-direction: column; align-items: flex-start; } /* Stack footer items */
-    .read-more-btn { margin-top: 10px; margin-left: 0; } /* Adjust button margin */
+    .social-links { gap: 10px; } /* Reduce gap further */
+    .project-footer { flex-direction: column; align-items: flex-start; }
+    .read-more-btn { margin-top: 10px; margin-left: 0; }
 }

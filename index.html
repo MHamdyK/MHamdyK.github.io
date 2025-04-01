@@ -102,19 +102,35 @@
             <div class="projects-grid">
                 <div class="project-card reveal">
                     <h4>AI Model Development for En2ly (Startup)</h4>
-                    <p>Integrated a multi-head AI model (classifying furniture type & estimating dimensions) into a startup's backend. Trained on Bonn Furniture Styles Dataset, optimized locally, and converted to ONNX/TFLite for real-time use.</p>
-                    <span class="repo-status">Private Repository</span>
+                    <div class="project-description"> {/* Added this wrapper */}
+                        <p>Integrated a multi-head AI model...</p>
+                    </div>
+                    <div class="project-footer"> {/* Added footer wrapper */}
+                         <span class="repo-status">Private Repository</span>
+                         {/* Read More button will be added here by JS if needed */}
+                    </div>
                 </div>
-                 <div class="project-card reveal">
+                <div class="project-card reveal">
                     <h4>Fawry Competition (On-going) - Phase 1 Qualified</h4>
-                    <p><strong>Face Identification:</strong> Developed a deep learning face re-id system. Fine-tuned InceptionResNetV1 (VGGFace2) with ArcMarginProduct, achieving 90% validation accuracy using custom PyTorch datasets and cosine similarity.</p>
-                     <p><strong>Multi-Object Tracking:</strong> Built a pedestrian tracking system using YOLOv8 (detection) and ByteTrack (tracking) on the MOT20 dataset, achieving 65% HOTA. Included custom training and hyperparameter tuning.</p>
-                    <span class="repo-status">Private Repository (Competition)</span>
+                    <div class="project-description"> {/* Description wrapper */}
+                        <p><strong>Face Identification:</strong> Developed a deep learning face re-id system. Fine-tuned InceptionResNetV1 (VGGFace2) with ArcMarginProduct, achieving 90% validation accuracy using custom PyTorch datasets and cosine similarity.</p>
+                        <p><strong>Multi-Object Tracking:</strong> Built a pedestrian tracking system using YOLOv8 (detection) and ByteTrack (tracking) on the MOT20 dataset, achieving 65% HOTA. Included custom training and hyperparameter tuning.</p>
+                         {/* Both paragraphs go inside the description wrapper */}
+                    </div>
+                    <div class="project-footer"> {/* Footer wrapper */}
+                        <span class="repo-status">Private Repository (Competition)</span>
+                        {/* Read More button will be added here by JS if needed */}
+                    </div>
                 </div>
                 <div class="project-card reveal">
                     <h4>English-Arabic Neural Machine Translation</h4>
-                    <p>Built LSTM-based seq2seq models (with/without attention) in TensorFlow/Keras. Developed data preprocessing pipelines for tokenization and encoding.</p>
-                    <a href="https://github.com/MHamdyK/Neural-Machine-Translation-Eng-Arb" target="_blank" rel="noopener noreferrer" class="repo-link">View on GitHub</a>
+                    <div class="project-description"> {/* Description wrapper */}
+                        <p>Built LSTM-based seq2seq models (with/without attention) in TensorFlow/Keras. Developed data preprocessing pipelines for tokenization and encoding.</p>
+                    </div>
+                    <div class="project-footer"> {/* Footer wrapper */}
+                        <a href="https://github.com/MHamdyK/Neural-Machine-Translation-Eng-Arb" target="_blank" rel="noopener noreferrer" class="repo-link">View on GitHub</a>
+                        {/* Read More button will be added here by JS if needed */}
+                    </div>
                 </div>
                  <!-- Add other key projects from CV if desired -->
 

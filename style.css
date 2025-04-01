@@ -7,12 +7,15 @@
     --accent-color: #00aaff;
     --accent-hover-color: #007bff;
     --card-bg-color: #2a2a2a;
-    --card-hover-bg-color: #3a3a3a; /* Added for hover */
+    --card-hover-bg-color: #3a3a3a;
     --card-border-color: rgba(255, 255, 255, 0.1);
     --subtle-text-color: #cccccc;
     --dim-text-color: #888888;
-    --shadow-color: rgba(0, 0, 0, 0.3); /* Added for consistency */
-    --shadow-hover-color: rgba(0, 0, 0, 0.4); /* Added for consistency */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-hover-color: rgba(0, 0, 0, 0.4);
+    /* --- Added Variable for fade-out effect --- */
+    --card-bg-for-fade: var(--card-bg-color); /* Used in ::after */
+    --card-hover-bg-for-fade: var(--card-hover-bg-color); /* Used in ::after */
 }
 * {
     margin: 0;
@@ -20,19 +23,22 @@
     box-sizing: border-box;
 }
 
-/* Replace the existing body style with this */
+/* Body styles */
 body {
     font-family: 'Poppins', sans-serif;
-    /* Use the gradient defined in variables */
     background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
     color: var(--text-color);
     line-height: 1.7;
     font-size: 16px;
-    /* Ensure gradient covers full height */
     min-height: 100vh;
 }
 
-/* Container for centering content */
+/* --- Smooth Scrolling (Added) --- */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Container */
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -42,299 +48,351 @@ body {
 /* Section Styling */
 .section {
     padding: 60px 0;
-    border-bottom: 1px solid #333; /* Subtle separator */
+    border-bottom: 1px solid #333; /* Use a slightly darker border maybe? #282828 */
 }
-
 .section:last-child {
     border-bottom: none;
 }
 
-h1, h2, h3, h4 {
-    color: #ffffff; /* White headings */
+/* Headings */
+h1, h2, h3 { /* Removed h4 from here */
+    color: var(--heading-color);
     margin-bottom: 15px;
     font-weight: 600;
 }
-
-h1 {
-    font-size: 3em; /* Larger for main name */
-    margin-bottom: 10px;
-}
-
+h1 { font-size: 3em; margin-bottom: 10px; }
 h2 {
     font-size: 2em;
     margin-bottom: 30px;
-    border-bottom: 2px solid #007bff; /* Accent color border */
+    border-bottom: 2px solid var(--accent-hover-color); /* Use variable */
     display: inline-block;
     padding-bottom: 5px;
 }
-
 h3 {
     font-size: 1.5em;
-    color: #cccccc; /* Slightly dimmer H3 */
-    margin-top: 20px; /* Space above H3s */
+    color: var(--subtle-text-color); /* Use variable */
+    margin-top: 20px;
 }
+/* h4 handled within card styles now */
 
-h4 {
-     font-size: 1.1em;
-     color: #e0e0e0; /* Brighter H4 for card titles */
-     margin-bottom: 8px;
-}
-
+/* Paragraphs & Links */
 p {
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Default paragraph margin */
 }
-
 a {
-    color: #00aaff; /* Bright blue links */
+    color: var(--accent-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
-
 a:hover {
-    color: #007bff; /* Darker blue on hover */
+    color: var(--accent-hover-color);
     text-decoration: underline;
 }
 
-ul {
-    list-style: none; /* Remove default bullets */
-    padding-left: 0;
-}
+/* Lists */
+ul { list-style: none; padding-left: 0; }
 
+/* Default List Item Style */
 li {
     margin-bottom: 8px;
-    padding-left: 15px;
+    padding-left: 20px; /* Adjusted padding for custom bullet */
     position: relative;
 }
-/* Custom bullet */
 li::before {
-    content: '»';
+    content: '»'; /* Or '•' */
     position: absolute;
     left: 0;
-    color: #007bff; /* Accent color bullet */
+    color: var(--accent-color); /* Use variable */
     font-weight: bold;
+    top: 1px; /* Fine-tune vertical alignment */
 }
-
 
 /* ========== Specific Section Styles ========== */
 
 /* Hero Section */
-#hero {
-    text-align: center;
-    padding-top: 80px; /* More space at the top */
-}
-
+#hero { text-align: center; padding-top: 80px; }
 #hero .tagline {
     font-size: 1.2em;
-    color: #cccccc;
+    color: var(--subtle-text-color);
     margin-bottom: 20px;
     font-weight: 300;
 }
-
 #hero .summary {
     max-width: 700px;
-    margin: 0 auto 25px auto; /* Center summary */
-    color: #b3b3b3;
+    margin: 0 auto 25px auto;
+    color: var(--subtle-text-color); /* Use consistent variable */
 }
-
 .social-links a,
 .social-links span {
     margin: 0 12px;
-    display: inline-block; /* Align links/info nicely */
-    color: #cccccc; /* Lighter color for contact info */
+    display: inline-block;
+    color: var(--subtle-text-color);
     font-size: 0.95em;
 }
 .social-links a {
-    color: #00aaff; /* Ensure links are distinct */
+    color: var(--accent-color); /* Link color */
+    transition: color 0.3s ease, transform 0.3s ease; /* Added transform */
 }
-
+.social-links a:hover {
+    color: var(--accent-hover-color);
+    transform: scale(1.1); /* Subtle grow on hover */
+}
 
 /* Skills Section */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
-    gap: 30px; /* Space between columns/rows */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
 }
-
-.skills-grid h3 {
-    color: #00aaff; /* Accent color for skill category */
+.skills-grid h3 { /* Title within skill category */
+    color: var(--accent-color);
     border-bottom: 1px solid #444;
     padding-bottom: 5px;
     margin-bottom: 15px;
-     margin-top: 0; /* Reset margin for grid items */
+    margin-top: 0;
+    font-size: 1.3em; /* Adjust size if needed */
+}
+.skills-grid ul li { /* Style list items in skills */
+     margin-bottom: 6px;
+}
+.skills-grid ul li::before { /* Maybe different bullet for skills? */
+    content: '▹'; /* Example: triangle bullet */
+    color: var(--accent-color);
+    top: 2px;
 }
 
 /* Projects Section */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid for cards */
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px; /* Increased gap slightly */
 }
 
+/* --- Project Card Base --- */
 .project-card {
-    background-color: var(--card-bg-color); /* Use variable */
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px var(--shadow-color); /* Use variable */
-    /* Updated transition for smoother hover effects */
-    transition: transform 0.35s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.3s ease-in-out;
+    background-color: var(--card-bg-color);
+    padding: 0; /* Padding applied to inner elements */
+    border-radius: 10px;
+    box-shadow: 0 6px 12px var(--shadow-color);
+    /* Added border-color transition */
+    transition: transform 0.35s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 200px;
+    overflow: hidden;
+    position: relative;
+    border-top: 4px solid transparent; /* Top border for hover */
+    border-left: 4px solid transparent; /* Left border for hover */
 }
 
+/* --- Project Card Hover --- */
 .project-card:hover {
-    transform: translateY(-8px) scale(1.02); /* Lift higher and slightly grow */
-    box-shadow: 0 12px 24px var(--shadow-hover-color); /* Stronger shadow, use variable */
-    background-color: var(--card-hover-bg-color); /* Use hover variable */
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px var(--shadow-hover-color);
+    background-color: var(--card-hover-bg-color);
+    border-top-color: var(--accent-color); /* Show top border */
+    border-left-color: var(--accent-color); /* Show left border (Corner effect) */
+    /* Update fade variable on hover if fade effect is used */
+    --card-bg-for-fade: var(--card-hover-bg-color);
 }
 
-.project-card p {
-     margin-bottom: 15px;
-     color: #c0c0c0; /* Slightly lighter paragraph text in cards */
-     flex-grow: 1; /* Allow paragraph to take available space */
+/* --- Project Card Title --- */
+.project-card h4 {
+    padding: 20px 25px 15px 25px;
+    font-size: 1.25em;
+    margin: 0;
+    color: var(--heading-color); /* Ensure it uses heading color */
+    font-weight: 700; /* Make title bolder */
 }
 
-.repo-status {
-    display: inline-block;
-    margin-top: 15px; /* Space above status/link */
-    font-style: italic;
-    color: #888; /* Dimmer color for status */
+/* --- Project Description Wrapper --- */
+.project-description {
+    padding: 0 25px 15px 25px;
+    flex-grow: 1;
+    /* Remove transition from here, apply to paragraph for truncation */
+}
+
+/* --- Project Description Paragraph --- */
+.project-description p {
+    margin-bottom: 10px; /* Space between paragraphs if multiple */
+    color: var(--subtle-text-color);
+    font-size: 0.95em;
+    line-height: 1.6;
+    /* Smooth height transition for read more/less */
+    transition: max-height 0.6s ease-in-out;
+}
+.project-description p:last-child {
+     margin-bottom: 0; /* No margin on last paragraph */
+}
+
+/* --- Text Truncation Styles (MISSING PART) --- */
+.project-description.truncated {
+    max-height: 100px; /* Initial max height (adjust based on font/line-height, approx 4 lines) */
+    overflow: hidden; /* Hide the overflow */
+    position: relative; /* Needed for optional fade effect */
+}
+/* The actual line clamping (Webkit browsers) */
+.project-description.truncated p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Try to show 4 lines */
+    -webkit-box-orient: vertical;
+}
+
+/* --- Optional Fade-Out Effect (Commented Out) --- */
+/* Uncomment this block to enable the fade-out */
+/*
+.project-description.truncated::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35px;
+    background: linear-gradient(to bottom, transparent, var(--card-bg-for-fade));
+    pointer-events: none;
+    transition: background 0.3s ease-in-out;
+}
+*/
+
+/* --- Project Card Footer (MISSING PART) --- */
+.project-footer {
+    padding: 10px 25px 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto; /* Pushes footer down */
+    min-height: 40px; /* Ensure footer has some height */
+}
+
+/* Styles for Status/Link within Footer */
+.repo-status, .repo-link {
     font-size: 0.9em;
+    margin-top: 0; /* Reset margin from original */
 }
-
+.repo-status {
+    color: var(--dim-text-color);
+    font-style: italic;
+}
 .repo-link {
-    display: inline-block;
-    margin-top: 15px;
     font-weight: bold;
-    /* background-color: #007bff;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 4px; */
+    /* Removed old background styles */
 }
-/* .repo-link:hover {
-    background-color: #0056b3;
-    text-decoration: none;
-} */
+.repo-link:hover {
+    /* Keep default link hover */
+}
+
+/* --- Read More Button (MISSING PART) --- */
+.read-more-btn {
+    background: none;
+    border: 1px solid var(--accent-color); /* Give it a subtle border */
+    color: var(--accent-color);
+    font-weight: 600; /* Slightly bolder */
+    cursor: pointer;
+    padding: 4px 10px; /* Button padding */
+    font-size: 0.85em; /* Slightly smaller */
+    border-radius: 5px; /* Rounded corners */
+    display: none; /* Hidden by default */
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    margin-left: 10px; /* Space from the repo link/status */
+}
+.read-more-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-gradient-start); /* Dark text on hover */
+    border-color: var(--accent-color);
+    text-decoration: none; /* Remove underline on hover */
+}
 
 
+/* --- GitHub Loading Message --- */
 #github-projects-loading {
     text-align: center;
     padding: 20px;
-    color: #888;
+    color: var(--dim-text-color);
 }
 
 /* Education & Credentials Section */
-.education-item {
-    margin-bottom: 25px;
-}
-.education-item h4 {
-    color: #e0e0e0;
-}
-.education-item p {
-     margin-bottom: 5px;
-}
-.education-item p i { /* Style for coursework */
-     color: #aaa;
-     font-size: 0.95em;
-}
+.education-item { margin-bottom: 25px; }
+.education-item h4 { color: var(--heading-color); font-size: 1.15em; }
+.education-item p { margin-bottom: 5px; }
+.education-item p i { color: var(--dim-text-color); font-size: 0.95em; }
 
 .credentials-list li {
     margin-bottom: 12px;
-    padding-left: 20px; /* Add space for the bullet */
-    position: relative; /* Needed for absolute positioning of the bullet */
+    padding-left: 20px;
+    position: relative;
 }
-.credentials-list li::before {
-    content: '•'; /* Use a standard bullet character */
-    position: absolute; /* Position the bullet precisely */
-    left: 0;          /* Align bullet to the far left */
-    top: 0px;         /* Adjust vertical alignment if needed */
-    color: #00aaff;   /* Use the accent color for the bullet */
-    font-weight: bold; /* Optional: Make the bullet bold */
-    /* Remove margin-right if using absolute positioning */
+.credentials-list li::before { /* Use consistent bullet */
+    content: '•';
+    position: absolute;
+    left: 0;
+    top: 1px;
+    color: var(--accent-color);
+    font-weight: bold;
 }
-
 .credentials-list span.date {
-    color: #888;
+    color: var(--dim-text-color);
     font-size: 0.9em;
     margin-left: 10px;
+    display: inline-block; /* Ensure proper spacing */
 }
-.credentials-list a {
+.credentials-list a { /* Link for certificate */
     margin-left: 5px;
     font-size: 0.9em;
+    /* Optional: Add icon */
+    /* display: inline-flex; */
+    /* align-items: center; */
 }
+/* .credentials-list a::after { */ /* Example icon */
+/*    content: ' 🔗'; */
+/* } */
 
 
 /* Contact Section (Footer) */
 #contact {
     text-align: center;
-    border-bottom: none; /* No border for the last section */
-    padding-bottom: 40px; /* Less padding at the very bottom */
-}
-#contact h2 {
-    display: block; /* Center the H2 */
     border-bottom: none;
+    padding: 50px 0 40px 0; /* More padding above */
 }
-#contact .social-links {
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
-.copyright {
-    margin-top: 30px;
-    font-size: 0.9em;
-    color: #888;
-}
-
-/* Simple Transitions for Smoothness */
-a, .project-card {
-    transition: all 0.3s ease-in-out;
-}
+#contact h2 { display: block; border-bottom: none; margin-bottom: 20px; }
+#contact p { color: var(--subtle-text-color); }
+#contact .social-links { margin-top: 25px; margin-bottom: 30px; }
+.copyright { margin-top: 40px; font-size: 0.9em; color: var(--dim-text-color); }
 
 
-/* Initial hidden state */
+/* --- Scroll Reveal Animation Styles --- */
 .reveal {
     opacity: 0;
-    transform: translateY(40px); /* Start further down */
-    transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1); /* Smoother ease */
-    /* Prevent transition from firing on page load for elements initially in view */
-    /* will-change helps performance slightly */
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
     will-change: opacity, transform;
 }
-
-/* State when element becomes visible */
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
 }
-
-
+/* Add slight delay for items in grids */
 .skills-grid > div.reveal.visible { transition-delay: 0.1s; }
-.projects-grid > .project-card.reveal.visible { transition-delay: 0.1s; }
+.projects-grid > .project-card.reveal.visible { transition-delay: 0.15s; } /* Slightly more delay */
 
 
-/* Responsive Adjustments */
+/* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-    h1 {
-        font-size: 2.5em;
-    }
-    h2 {
-        font-size: 1.8em;
-    }
-    .skills-grid, .projects-grid {
-        grid-template-columns: 1fr; /* Stack grids on smaller screens */
-    }
-    .container {
-        padding: 0 15px;
-    }
-    .section {
-        padding: 40px 0;
-    }
-    #hero {
-        padding-top: 50px;
-    }
-    .social-links a,
-    .social-links span {
-        margin: 5px 8px; /* Adjust spacing */
-    }
+    h1 { font-size: 2.5em; }
+    h2 { font-size: 1.8em; }
+    .skills-grid, .projects-grid { grid-template-columns: 1fr; } /* Stack grids */
+    .container { padding: 0 15px; }
+    .section { padding: 50px 0; }
+    #hero { padding-top: 60px; }
+    .social-links a, .social-links span { margin: 8px 8px; font-size: 0.9em; } /* Adjust spacing */
+    .project-card h4 { font-size: 1.15em; }
+    .project-description p { font-size: 0.9em; }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 2.2em; }
+    h2 { font-size: 1.6em; }
+    body { font-size: 15px; }
+    .social-links a, .social-links span { margin: 6px 5px; }
+    .project-footer { flex-direction: column; align-items: flex-start; } /* Stack footer items */
+    .read-more-btn { margin-top: 10px; margin-left: 0; } /* Adjust button margin */
 }

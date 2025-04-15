@@ -134,7 +134,7 @@
                             <span class="tag">classification</span>
                             <span class="tag">ONNX</span>
                             <span class="tag">TFLite</span>
-                            
+
                         </div>
                         <span class="repo-status">Private Repository</span>
                         <!-- Read More button potentially added by JS here -->
@@ -189,9 +189,21 @@
 
             <h3>Other Public Repositories</h3>
             <div id="github-projects-loading">Loading repositories from GitHub...</div>
-            <div id="github-projects" class="projects-grid">
-                <!-- GitHub repositories will be loaded here by script.js -->
+
+            <!-- ======== GITHUB CAROUSEL STRUCTURE ======== -->
+            <div id="github-carousel-container" class="carousel-container" style="visibility: hidden;"> <!-- Hide until JS initializes -->
+                <div id="github-projects" class="carousel-track projects-grid">
+                    <!-- GitHub repositories will be loaded here by script.js -->
+                    <!-- Cards will have project-card and reveal classes added by JS -->
+                </div>
+                <button class="carousel-button prev" aria-label="Previous repositories slide"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="carousel-button next" aria-label="Next repositories slide"><i class="fa-solid fa-chevron-right"></i></button>
+                <div class="carousel-dots">
+                    <!-- Dot indicators will be generated here by script.js -->
+                </div>
             </div>
+            <!-- ======== END GITHUB CAROUSEL STRUCTURE ======== -->
+
         </section>
 
         <!-- ========== Education & Credentials Section ========== -->

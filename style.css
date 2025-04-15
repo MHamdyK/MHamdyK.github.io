@@ -16,6 +16,15 @@
     /* --- Added Variable for fade-out effect --- */
     --card-bg-for-fade: var(--card-bg-color); /* Used in ::after */
     --card-hover-bg-for-fade: var(--card-hover-bg-color); /* Used in ::after */
+
+    /* --- Carousel Variables --- */
+    --carousel-arrow-bg: rgba(42, 42, 42, 0.7);
+    --carousel-arrow-hover-bg: rgba(0, 123, 255, 0.7);
+    --carousel-arrow-color: #ffffff;
+    --carousel-dot-inactive-bg: #555;
+    --carousel-dot-active-bg: var(--accent-color);
+    --carousel-transition-speed: 0.5s; /* Speed for slide transition */
+    --carousel-card-gap: 25px; /* Gap between cards */
 }
 * {
     margin: 0;
@@ -71,8 +80,10 @@ h2 {
 h3 {
     font-size: 1.5em;
     color: var(--subtle-text-color);
-    margin-top: 20px;
+    margin-top: 20px; /* Keep consistent top margin */
+    margin-bottom: 20px; /* Add consistent bottom margin before grids/carousels */
 }
+
 
 /* Paragraphs & Links */
 p { margin-bottom: 15px; }
@@ -142,15 +153,6 @@ li::before {
     text-decoration: underline;
      transform: scale(1.1);
 }
-
-/* Styling for non-link text (phone, location) - This rule is NO LONGER NEEDED as spans are outside .social-links */
-/*
-.social-links span {
-    display: inline-block;
-    color: var(--subtle-text-color);
-    font-size: 0.95em;
-}
-*/
 
 /* ========== Button Styles (Keep As Is) ========== */
 .btn {
@@ -232,16 +234,17 @@ li::before {
 }
 
 /* Projects Section */
-.projects-grid {
+.projects-grid { /* Base grid for highlighted, track uses flex */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    gap: var(--carousel-card-gap); /* Use variable for consistency */
 }
+
 
 /* --- Project Card Base --- */
 .project-card {
     background-color: var(--card-bg-color);
-    padding: 0;
+    padding: 0; /* Padding handled by inner elements */
     border-radius: 10px;
     box-shadow: 0 6px 12px var(--shadow-color);
     transition: transform 0.35s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
@@ -251,6 +254,7 @@ li::before {
     position: relative;
     border-top: 4px solid transparent;
     border-left: 4px solid transparent;
+    height: 100%; /* Ensure cards have consistent height if rows wrap unevenly */
 }
 
 /* --- Project Card Hover --- */
@@ -275,7 +279,8 @@ li::before {
 /* --- Project Description Wrapper --- */
 .project-description {
     padding: 0 25px 15px 25px;
-    flex-grow: 1;
+    flex-grow: 1; /* Allow description to take available space */
+    min-height: 80px; /* Give a minimum height */
 }
 
 /* --- Project Description Paragraph --- */
@@ -292,18 +297,19 @@ li::before {
 
 /* --- Text Truncation Styles --- */
 .project-description.truncated {
-    max-height: 100px;
+    max-height: 100px; /* Adjust as needed */
     overflow: hidden;
-    position: relative;
+    position: relative; /* Needed for potential pseudo-elements */
 }
+/* Webkit clamp is good, but max-height provides a fallback */
 .project-description.truncated p {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 4; /* Show ~4 lines */
     -webkit-box-orient: vertical;
 }
 
-/* --- Fade-Out Effect (Commented Out) --- */
+/* --- Fade-Out Effect (Optional - Keep commented unless desired) --- */
 /*
 .project-description.truncated::after {
     content: "";
@@ -324,10 +330,11 @@ li::before {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: auto;
+    margin-top: auto; /* Push footer to bottom */
     min-height: 40px;
     flex-wrap: wrap;
     gap: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08); /* Subtle separator */
 }
 
 /* --- Tech Tag Styles --- */
@@ -377,9 +384,9 @@ li::before {
     padding: 4px 10px;
     font-size: 0.85em;
     border-radius: 5px;
-    display: none;
+    display: none; /* JS will display if needed */
     transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-    margin-left: 10px;
+    margin-left: 10px; /* Space from other footer items */
 }
 .read-more-btn:hover {
     background-color: var(--accent-color);
@@ -391,9 +398,102 @@ li::before {
 /* --- GitHub Loading Message --- */
 #github-projects-loading {
     text-align: center;
-    padding: 20px;
+    padding: 40px 20px; /* More padding */
     color: var(--dim-text-color);
+    font-size: 1.1em;
+    min-height: 100px; /* Ensure space is reserved */
 }
+
+
+/* ========== GITHUB CAROUSEL STYLES ========== */
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden; /* Crucial: Hides cards outside the view */
+    padding: 0 45px; /* Space for the absolute positioned buttons */
+}
+
+/* The track that holds and moves the cards */
+#github-projects.carousel-track {
+    display: flex; /* Override grid */
+    gap: var(--carousel-card-gap); /* Space between cards */
+    transition: transform var(--carousel-transition-speed) ease-in-out;
+    padding-bottom: 10px; /* Space below cards if needed */
+     will-change: transform; /* Performance hint */
+     /* No width here - width is determined by children */
+}
+
+/* Cards within the carousel track */
+#github-projects.carousel-track > .project-card {
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    /* --- CARDS PER VIEW (Desktop) --- */
+    flex-basis: calc((100% / 3) - (var(--carousel-card-gap) * 2 / 3));
+    width: calc((100% / 3) - (var(--carousel-card-gap) * 2 / 3)); /* Explicit width for safety */
+    margin-bottom: 0; /* Remove margin from grid context */
+}
+
+/* Carousel Navigation Buttons */
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: var(--carousel-arrow-bg);
+    color: var(--carousel-arrow-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.carousel-button:hover:not(:disabled) {
+    background-color: var(--carousel-arrow-hover-bg);
+    transform: translateY(-50%) scale(1.1);
+}
+.carousel-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: translateY(-50%) scale(0.95); /* Slight shrink when disabled */
+}
+.carousel-button.prev { left: 5px; }
+.carousel-button.next { right: 5px; }
+
+/* Carousel Dot Indicators */
+.carousel-dots {
+    text-align: center;
+    margin-top: 25px;
+    padding-bottom: 10px; /* Ensure space below */
+}
+.carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: var(--carousel-dot-inactive-bg);
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.carousel-dot:hover {
+    transform: scale(1.2);
+}
+.carousel-dot.active {
+    background-color: var(--carousel-dot-active-bg);
+    transform: scale(1.3);
+}
+
+/* ========== END GITHUB CAROUSEL STYLES ========== */
+
 
 /* Education & Credentials Section */
 .education-item { margin-bottom: 25px; }
@@ -447,19 +547,37 @@ li::before {
     transform: translateY(40px);
     transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
     will-change: opacity, transform;
+    /* Ensure revealed items in the carousel track are visible */
+    visibility: hidden; /* Initially hidden */
 }
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
+    visibility: visible; /* Become visible */
 }
-.skills-grid > div.reveal.visible { transition-delay: 0.1s; }
-.projects-grid > .project-card.reveal.visible { transition-delay: 0.15s; }
+/* Delays - Apply carefully if needed, might conflict with carousel */
+/* .skills-grid > div.reveal.visible { transition-delay: 0.1s; } */
+/* .projects-grid > .project-card.reveal.visible { transition-delay: 0.15s; } */
+/* Delay for cards within the carousel might be complex, rely on base transition */
+
 
 /* --- Responsive Adjustments --- */
+@media (max-width: 992px) { /* Adjusted breakpoint for 2 cards */
+     /* --- CARDS PER VIEW (Tablet) --- */
+    #github-projects.carousel-track > .project-card {
+        flex-basis: calc((100% / 2) - (var(--carousel-card-gap) * 1 / 2));
+        width: calc((100% / 2) - (var(--carousel-card-gap) * 1 / 2));
+    }
+     .carousel-container { padding: 0 40px; } /* Slightly less padding */
+     .carousel-button { width: 35px; height: 35px; font-size: 1em; }
+}
+
 @media (max-width: 768px) {
     h1 { font-size: 2.5em; }
     h2 { font-size: 1.8em; }
-    .skills-grid, .projects-grid { grid-template-columns: 1fr; }
+    /* Adjust highlighted projects grid */
+    .projects-grid:not(.carousel-track) { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
     .container { padding: 0 15px; }
     .section { padding: 50px 0; }
     #hero { padding-top: 60px; }
@@ -469,8 +587,22 @@ li::before {
     .hero-contact-info span { font-size: 0.85em; margin: 0 5px; }
     /* --- End hero contact info adjustment --- */
     .btn { padding: 8px 18px; }
-    .project-card h4 { font-size: 1.15em; }
-    .project-description p { font-size: 0.9em; }
+
+    /* --- CARDS PER VIEW (Mobile) --- */
+    #github-projects.carousel-track > .project-card {
+        flex-basis: calc(100% - 10px); /* Show almost 1 card, slight peek */
+        width: calc(100% - 10px); /* Give space for buttons */
+    }
+    .carousel-container { padding: 0 35px; } /* Adjust padding for smaller buttons */
+    .carousel-button { width: 30px; height: 30px; font-size: 0.9em; }
+    .carousel-button.prev { left: 3px; }
+    .carousel-button.next { right: 3px; }
+    .carousel-dots { margin-top: 20px; }
+    .carousel-dot { width: 8px; height: 8px; margin: 0 4px; }
+
+    /* Adjust project card footer on mobile */
+     .project-card h4 { font-size: 1.15em; }
+     .project-description p { font-size: 0.9em; }
     .project-footer {
         justify-content: flex-start;
          gap: 10px 15px;
@@ -489,7 +621,7 @@ li::before {
      }
      .read-more-btn {
          margin-top: 5px;
-         display: inline-block;
+         /* display: inline-block; */ /* Let JS handle display */
          width: auto;
      }
 }
@@ -507,4 +639,14 @@ li::before {
          gap: 5px;
      }
      .hero-contact-info span { margin: 0; } /* Remove horizontal margin */
+
+    /* Ensure carousel cards take up most space on very small screens */
+    #github-projects.carousel-track > .project-card {
+        flex-basis: calc(100% - 5px);
+        width: calc(100% - 5px);
+    }
+    .carousel-container { padding: 0 30px; } /* Minimal padding */
+     .carousel-button { width: 28px; height: 28px; font-size: 0.8em; }
+    .carousel-button.prev { left: 2px; }
+    .carousel-button.next { right: 2px; }
 }

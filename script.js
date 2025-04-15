@@ -1,207 +1,217 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Intersection Observer Setup for Scroll Reveal ---
-    let revealObserver;
+    let revealObserver; // Declare observer variable for scroll animations
+
+    // Check if IntersectionObserver is supported
     if ('IntersectionObserver' in window) {
         revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
+                // When element becomes intersecting (visible)
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                    entry.target.classList.add('visible'); // Add class to trigger animation
+                    observer.unobserve(entry.target); // Stop observing once revealed
                 }
             });
         }, {
-            root: null,
-            threshold: 0.15,
-            rootMargin: '0px 0px -50px 0px'
+            root: null, // Observe intersections relative to the viewport
+            threshold: 0.15, // Trigger when 15% of the element is visible
+            rootMargin: '0px 0px -50px 0px' // Trigger animation slightly before it's fully in view
         });
+
+        // Find all elements with the 'reveal' class that are present on page load
         const initialRevealElements = document.querySelectorAll('.reveal');
         initialRevealElements.forEach(element => {
+            // Start observing each initial element
             revealObserver.observe(element);
         });
+
     } else {
+        // Fallback for very old browsers that don't support IntersectionObserver
         console.log("Intersection Observer not supported. Showing all 'reveal' elements immediately.");
         const allRevealElements = document.querySelectorAll('.reveal');
-        allRevealElements.forEach(element => element.classList.add('visible'));
+        allRevealElements.forEach(element => {
+            element.classList.add('visible'); // Make them visible directly
+        });
     }
 
     // --- "Read More" Functionality ---
+
+    /**
+     * Checks project description containers, adds truncation and 'Read More' button if needed.
+     */
     function setupReadMore() {
+        // Select all description wrapper divs
         const descriptionContainers = document.querySelectorAll('.project-description');
+
         descriptionContainers.forEach(descContainer => {
-            const paragraph = descContainer.querySelector('p');
-            const footer = descContainer.nextElementSibling;
+            const paragraph = descContainer.querySelector('p'); // Find the first paragraph inside
+            const footer = descContainer.nextElementSibling; // Get the next sibling (should be the footer)
+
+            // Basic checks to ensure elements exist
             if (!paragraph || !footer || !footer.classList.contains('project-footer')) {
-                return;
+                // console.warn('Skipping Read More setup for card - missing paragraph or footer.', descContainer.closest('.project-card'));
+                return; // Skip if structure isn't right
             }
-            // Temporarily remove truncation to get full height
+
+            // Temporarily remove truncation to measure full height accurately
             descContainer.classList.remove('truncated');
             const fullHeight = paragraph.scrollHeight;
+            const visibleHeight = paragraph.clientHeight; // Height when constrained by CSS (or not)
+
+            // Add truncation class back to check against CSS max-height
             descContainer.classList.add('truncated');
-            const truncatedHeight = descContainer.clientHeight;
-            const needsReadMore = fullHeight > truncatedHeight + 5; // small buffer
+            const truncatedHeight = descContainer.clientHeight; // Get height *with* max-height style applied
+
+            // Check if the full content height is greater than the height allowed by CSS truncation
+            const needsReadMore = fullHeight > truncatedHeight + 5; // Add a small buffer (e.g., 5px)
+
+            // Ensure no existing button before adding a new one
             const existingButton = footer.querySelector('.read-more-btn');
             if (existingButton) {
-                existingButton.remove();
+                 existingButton.remove(); // Remove if recalculating
             }
+
             if (needsReadMore) {
+                // Create the "Read More" button
                 const readMoreBtn = document.createElement('button');
                 readMoreBtn.classList.add('read-more-btn');
                 readMoreBtn.textContent = 'Read More';
-                readMoreBtn.style.display = 'inline-block';
+                readMoreBtn.style.display = 'inline-block'; // Make it visible (CSS hides by default)
+
+                // Append the button to the footer
                 footer.appendChild(readMoreBtn);
+
+                // Add the click event listener
                 readMoreBtn.addEventListener('click', function() {
                     const container = this.closest('.project-card').querySelector('.project-description');
-                    container.classList.toggle('truncated');
-                    this.textContent = container.classList.contains('truncated') ? 'Read More' : 'Read Less';
+                    container.classList.toggle('truncated'); // Toggle the class
+
+                    // Update button text
+                    if (container.classList.contains('truncated')) {
+                        this.textContent = 'Read More';
+                    } else {
+                        this.textContent = 'Read Less';
+                        // Optional: Scroll the card into view slightly if it expands a lot
+                        // container.closest('.project-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 });
+
             } else {
-                descContainer.classList.remove('truncated');
+                // If it doesn't need a button, ensure truncated class is removed
+                 descContainer.classList.remove('truncated');
             }
         });
     }
+
+    // Call setupReadMore initially to process cards already in the HTML
     setupReadMore();
 
-    // --- GitHub Repository Fetch & Slider Setup ---
+
+    // --- GitHub Repository Fetch Logic ---
     const githubUsername = 'MHamdyK';
+    const repoListElement = document.getElementById('github-projects');
     const loadingElement = document.getElementById('github-projects-loading');
-    // Fetch more repos (30 instead of 6)
-    const apiUrl = `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=30`;
+    const apiUrl = `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=6`; // Fetch latest 6 repos
+
     fetch(apiUrl)
         .then(response => {
+            // Check if the request was successful
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
+            return response.json(); // Parse the JSON response
         })
         .then(repos => {
+            // Hide the loading message
             if (loadingElement) {
                 loadingElement.style.display = 'none';
             }
-            // Exclude the highlighted repository if needed
+
+            // Filter out a specific repository if needed (e.g., one already highlighted)
             const highlightedRepoName = "Neural-Machine-Translation-Eng-Arb";
             const reposToDisplay = repos.filter(repo => repo.name !== highlightedRepoName);
+
+            // Check if there are any repositories left to display
             if (reposToDisplay.length === 0) {
-                const repoListElement = document.getElementById('github-projects');
                 if (repoListElement) {
                     repoListElement.innerHTML = '<p>No other public repositories found.</p>';
                 }
-                return;
+                return; // Exit if no repos to show
             }
-            // Append cards to the slider container
-            const repoListElement = document.getElementById('github-projects');
-            const fetchedRepoCards = [];
+
+            const fetchedRepoCards = []; // Array to hold newly created card elements
+
+            // Loop through the repositories to display
             reposToDisplay.forEach(repo => {
+                // Create the main card div
                 const card = document.createElement('div');
-                card.classList.add('project-card', 'reveal');
-                // Title
+                card.classList.add('project-card', 'reveal'); // Add base and reveal classes
+
+                // Create and append the title (h4)
                 const title = document.createElement('h4');
-                title.textContent = repo.name.replace(/[-_]/g, ' ');
+                title.textContent = repo.name.replace(/[-_]/g, ' '); // Format name
                 card.appendChild(title);
-                // Description container
+
+                // Create the description wrapper div
                 const descriptionContainer = document.createElement('div');
                 descriptionContainer.classList.add('project-description');
+
+                // Create and append the paragraph (p) inside the wrapper
                 const description = document.createElement('p');
-                description.textContent = repo.description || 'No description provided.';
+                description.textContent = repo.description || 'No description provided.'; // Use repo description or fallback text
                 descriptionContainer.appendChild(description);
-                card.appendChild(descriptionContainer);
-                // Footer with GitHub link
+                card.appendChild(descriptionContainer); // Append wrapper to card
+
+                // Create the footer div
                 const footer = document.createElement('div');
                 footer.classList.add('project-footer');
+
+                // Create and append the GitHub link (a) inside the footer
                 const link = document.createElement('a');
                 link.href = repo.html_url;
                 link.textContent = 'View on GitHub';
-                link.target = '_blank';
+                link.target = '_blank'; // Open in new tab
                 link.rel = 'noopener noreferrer';
                 link.classList.add('repo-link');
                 footer.appendChild(link);
-                card.appendChild(footer);
-                // Append card to slider
-                repoListElement.appendChild(card);
+                card.appendChild(footer); // Append footer to card
+
+                // Append the fully constructed card to the list element in the HTML
+                if (repoListElement) {
+                    repoListElement.appendChild(card);
+                }
+
+                // Add the new card element to our array for later processing
                 fetchedRepoCards.push(card);
             });
-            // Process intersection observer on new cards
-            if (revealObserver) {
+
+            // --- Process newly added GitHub repo cards ---
+
+            // 1. Make the IntersectionObserver watch these new cards for scroll reveal
+            if (revealObserver) { // Check if observer exists (i.e., supported)
                 fetchedRepoCards.forEach(card => {
                     revealObserver.observe(card);
                 });
             } else {
-                fetchedRepoCards.forEach(card => card.classList.add('visible'));
+                 // If observer isn't supported, ensure they are visible anyway
+                 fetchedRepoCards.forEach(card => card.classList.add('visible'));
             }
-            // Re-run Read More logic for new cards
+
+
+            // 2. Run the "Read More" setup again to check these new cards for truncation
+            // Use a small delay to ensure styles are applied after appending
             setTimeout(setupReadMore, 100);
-            // Initialize the slider
-            initializeSlider();
+
+
         })
         .catch(error => {
+            // Handle errors during the fetch process
             console.error('Error fetching GitHub repositories:', error);
             if (loadingElement) {
                 loadingElement.textContent = 'Failed to load repositories from GitHub.';
-                loadingElement.style.color = '#ff6b6b';
+                loadingElement.style.color = '#ff6b6b'; // Error indication color
             }
         });
 
-    // --- Slider Initialization Function ---
-    function initializeSlider() {
-        const sliderWrapper = document.getElementById('github-slider');
-        const sliderContainer = document.getElementById('github-projects');
-        const prevButton = document.getElementById('slider-prev');
-        const nextButton = document.getElementById('slider-next');
-        const dotsContainer = document.getElementById('slider-dots');
-
-        // Make sure the slider elements are visible now that repos are loaded
-        if (sliderWrapper) {
-            sliderWrapper.style.display = 'block';
-        }
-        if (dotsContainer) {
-            dotsContainer.style.display = 'block';
-        }
-
-        // Set number of cards to show per slide (adjust as needed)
-        const itemsPerSlide = 3;
-        const cards = sliderContainer.querySelectorAll('.project-card');
-        const totalCards = cards.length;
-        const totalSlides = Math.ceil(totalCards / itemsPerSlide);
-        let currentSlide = 0;
-
-        function updateSlider() {
-            const sliderWidth = sliderWrapper.offsetWidth;
-            // Move sliderContainer by slider width per slide
-            sliderContainer.style.transform = `translateX(-${currentSlide * sliderWidth}px)`;
-            // Update active dot indicator
-            const dots = dotsContainer.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
-        }
-
-        // Build pagination dots
-        dotsContainer.innerHTML = '';
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('span');
-            dot.classList.add('dot');
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                currentSlide = i;
-                updateSlider();
-            });
-            dotsContainer.appendChild(dot);
-        }
-
-        // Add event listeners to arrow buttons
-        prevButton.addEventListener('click', () => {
-            if (currentSlide > 0) {
-                currentSlide--;
-                updateSlider();
-            }
-        });
-        nextButton.addEventListener('click', () => {
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                updateSlider();
-            }
-        });
-        window.addEventListener('resize', updateSlider);
-        updateSlider();
-    }
-});
+}); // End of DOMContentLoaded listener

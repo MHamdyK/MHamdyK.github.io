@@ -240,7 +240,6 @@ li::before {
     gap: var(--carousel-card-gap); /* Use variable for consistency */
 }
 
-
 /* --- Project Card Base --- */
 .project-card {
     background-color: var(--card-bg-color);
@@ -412,8 +411,11 @@ li::before {
     width: 100%;
     margin: 0 auto;
     overflow: hidden; /* Crucial: Hides cards outside the view */
-    padding: 0 45px; /* Space for the absolute positioned buttons */
+    /* Padding is ONLY for button space, not for content alignment */
+    /* Let's adjust button positioning instead if needed */
+    padding: 0; /* REMOVED PADDING HERE */
 }
+
 
 /* The track that holds and moves the cards */
 #github-projects.carousel-track {
@@ -421,17 +423,25 @@ li::before {
     gap: var(--carousel-card-gap); /* Space between cards */
     transition: transform var(--carousel-transition-speed) ease-in-out;
     padding-bottom: 10px; /* Space below cards if needed */
-     will-change: transform; /* Performance hint */
-     /* No width here - width is determined by children */
+    will-change: transform; /* Performance hint */
+    /* Add padding matching the desired button space */
+    padding-left: 45px;
+    padding-right: 45px;
+    /* Box sizing ensures padding is included in width calc IF width were set */
+    box-sizing: content-box; /* Make padding add to width if needed, but track width is dynamic */
+    /* We will NOT set an explicit width on the track itself via CSS */
+    width: max-content; /* Let the track be as wide as its flex children */
 }
 
 /* Cards within the carousel track */
 #github-projects.carousel-track > .project-card {
     flex-shrink: 0; /* Prevent cards from shrinking */
-    /* --- CARDS PER VIEW (Desktop) --- */
-    flex-basis: calc((100% / 3) - (var(--carousel-card-gap) * 2 / 3));
-    width: calc((100% / 3) - (var(--carousel-card-gap) * 2 / 3)); /* Explicit width for safety */
-    margin-bottom: 0; /* Remove margin from grid context */
+    /* --- CARDS PER VIEW (Desktop - Controlled by JS now) --- */
+    /* REMOVE FIXED CSS WIDTH/BASIS - let JS measure and translate */
+     width: 300px; /* Provide a sensible base width for measurement */
+     max-width: 340px; /* Prevent excessive stretching if needed */
+     /* flex-basis: auto; */ /* Let flex figure it out based on width */
+     margin-bottom: 0; /* Remove margin from grid context */
 }
 
 /* Carousel Navigation Buttons */
@@ -439,7 +449,7 @@ li::before {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
+    z-index: 10; /* Ensure buttons are on top */
     background-color: var(--carousel-arrow-bg);
     color: var(--carousel-arrow-color);
     border: none;
@@ -449,7 +459,7 @@ li::before {
     font-size: 1.2em;
     cursor: pointer;
     transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
-    display: flex;
+    display: flex; /* Use flex for centering icon */
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -472,17 +482,13 @@ li::before {
     margin-top: 25px;
     padding-bottom: 10px; /* Ensure space below */
 }
-.carousel-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background-color: var(--carousel-dot-inactive-bg);
-    border-radius: 50%;
-    margin: 0 5px;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+/* Carousel Dot Indicators */
+.carousel-dots {
+    text-align: center;
+    margin-top: 25px;
+    padding-bottom: 10px; /* Ensure space below */
+    position: relative; /* Ensure dots aren't overlapped by track padding adjustments */
+    z-index: 5;
 }
 .carousel-dot:hover {
     transform: scale(1.2);
@@ -547,13 +553,13 @@ li::before {
     transform: translateY(40px);
     transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
     will-change: opacity, transform;
-    /* Ensure revealed items in the carousel track are visible */
-    visibility: hidden; /* Initially hidden */
+    /* Let visibility be handled purely by opacity/transform now */
+    /* visibility: hidden; REMOVED */
 }
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
-    visibility: visible; /* Become visible */
+    /* visibility: visible; REMOVED */
 }
 /* Delays - Apply carefully if needed, might conflict with carousel */
 /* .skills-grid > div.reveal.visible { transition-delay: 0.1s; } */
@@ -562,14 +568,12 @@ li::before {
 
 
 /* --- Responsive Adjustments --- */
-@media (max-width: 992px) { /* Adjusted breakpoint for 2 cards */
-     /* --- CARDS PER VIEW (Tablet) --- */
-    #github-projects.carousel-track > .project-card {
-        flex-basis: calc((100% / 2) - (var(--carousel-card-gap) * 1 / 2));
-        width: calc((100% / 2) - (var(--carousel-card-gap) * 1 / 2));
-    }
-     .carousel-container { padding: 0 40px; } /* Slightly less padding */
+@media (max-width: 992px) {
+    /* Adjust button/padding maybe */
+     #github-projects.carousel-track { padding-left: 40px; padding-right: 40px; }
      .carousel-button { width: 35px; height: 35px; font-size: 1em; }
+     .carousel-button.prev { left: 3px; }
+     .carousel-button.next { right: 3px; }
 }
 
 @media (max-width: 768px) {
@@ -589,14 +593,14 @@ li::before {
     .btn { padding: 8px 18px; }
 
     /* --- CARDS PER VIEW (Mobile) --- */
+    #github-projects.carousel-track { padding-left: 35px; padding-right: 35px; }
     #github-projects.carousel-track > .project-card {
-        flex-basis: calc(100% - 10px); /* Show almost 1 card, slight peek */
-        width: calc(100% - 10px); /* Give space for buttons */
+        width: 280px; /* Adjust base width for mobile if needed */
+        max-width: 300px;
     }
-    .carousel-container { padding: 0 35px; } /* Adjust padding for smaller buttons */
     .carousel-button { width: 30px; height: 30px; font-size: 0.9em; }
-    .carousel-button.prev { left: 3px; }
-    .carousel-button.next { right: 3px; }
+    .carousel-button.prev { left: 2px; }
+    .carousel-button.next { right: 2px; }
     .carousel-dots { margin-top: 20px; }
     .carousel-dot { width: 8px; height: 8px; margin: 0 4px; }
 
@@ -641,12 +645,12 @@ li::before {
      .hero-contact-info span { margin: 0; } /* Remove horizontal margin */
 
     /* Ensure carousel cards take up most space on very small screens */
+    #github-projects.carousel-track { padding-left: 30px; padding-right: 30px; }
     #github-projects.carousel-track > .project-card {
-        flex-basis: calc(100% - 5px);
-        width: calc(100% - 5px);
+         width: calc(100vw - 80px); /* Example: Make card almost fill viewport width minus button space/margins */
+         max-width: 290px;
     }
-    .carousel-container { padding: 0 30px; } /* Minimal padding */
-     .carousel-button { width: 28px; height: 28px; font-size: 0.8em; }
-    .carousel-button.prev { left: 2px; }
-    .carousel-button.next { right: 2px; }
+    .carousel-button { width: 28px; height: 28px; font-size: 0.8em; }
+    .carousel-button.prev { left: 1px; }
+    .carousel-button.next { right: 1px; }
 }

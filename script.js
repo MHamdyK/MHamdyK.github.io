@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }, {
                 root: null,
-                threshold: 0.15, // Trigger when 15% visible
-                rootMargin: '0px 0px -50px 0px' // Trigger slightly before fully in view
+                threshold: 0.1, // Trigger when 10% visible (adjust if needed)
+                rootMargin: '0px 0px -40px 0px' // Trigger slightly before fully in view
             });
 
             // Observe elements already marked
@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (revealObserver) {
                 revealObserver.observe(element);
             }
+             // If observer is NOT supported (fallback case), make visible immediately
+             else if (!('IntersectionObserver' in window)) {
+                element.classList.add('visible');
+             }
         }
     }
 
@@ -62,80 +66,95 @@ document.addEventListener('DOMContentLoaded', function() {
             const paragraph = descContainer?.querySelector('p'); // Optional chaining
             const footer = card.querySelector('.project-footer'); // Find footer within the card
 
-            if (!paragraph || !footer) {
-                 // console.warn('Skipping Read More setup for card - missing paragraph or footer.', card);
+            if (!paragraph || !footer || !descContainer) {
+                 // console.warn('Skipping Read More setup for card - missing elements.', card);
                 return; // Skip if structure isn't right
             }
 
-            // Temporarily remove truncation to measure full height accurately
-            const wasTruncated = descContainer.classList.contains('truncated');
-            descContainer.classList.remove('truncated');
-            // Force reflow/repaint might be needed in some complex cases, but usually not
-            // void paragraph.offsetWidth;
-            const fullHeight = paragraph.scrollHeight;
-            const currentHeight = paragraph.clientHeight; // Height possibly constrained by CSS or naturally fitting
-
-            // Add truncation class back *if it was there* or if needed for measurement
-            if (wasTruncated) descContainer.classList.add('truncated');
-
-            // Decide max height based on CSS or calculate dynamically if needed
-            // Using a fixed value based on CSS max-height is simpler here
-            const cssMaxHeight = 100; // Match the max-height in CSS for .truncated
-            const needsReadMore = fullHeight > cssMaxHeight + 10; // Add a slightly larger buffer
-
-            // Ensure no existing button before adding a new one
+            // Ensure no existing button before proceeding
             const existingButton = footer.querySelector('.read-more-btn');
-             if (existingButton) {
-                 existingButton.remove(); // Remove if recalculating
+            if (existingButton) {
+                existingButton.remove(); // Remove if recalculating
+            }
+
+            // --- Check if Read More is needed ---
+            // Temporarily remove class to measure accurately
+             const wasTruncatedInitially = descContainer.classList.contains('truncated');
+             descContainer.classList.remove('truncated');
+
+             // Force browser to recalculate layout/styles before measuring scrollHeight
+             // Reading offsetHeight is a common trick to trigger reflow
+             void paragraph.offsetHeight;
+
+             const fullHeight = paragraph.scrollHeight;
+             const cssMaxHeightStyle = window.getComputedStyle(descContainer).maxHeight;
+             let cssMaxHeight = 100; // Default fallback
+             if (cssMaxHeightStyle && cssMaxHeightStyle !== 'none') {
+                // Try parsing pixel value, might need more robust parsing for other units
+                cssMaxHeight = parseFloat(cssMaxHeightStyle) || 100;
              }
-             // Reset state before adding button/removing class
-            descContainer.classList.remove('truncated'); // Start untruncated unless button is added
+
+            // Add a buffer (e.g., 10px) for line height variations etc.
+            const needsReadMore = fullHeight > cssMaxHeight + 10;
+
+            // Restore original state before adding button or finishing
+            if (wasTruncatedInitially) {
+                descContainer.classList.add('truncated');
+            }
+            // --- End Check ---
 
 
             if (needsReadMore) {
-                descContainer.classList.add('truncated'); // Add truncated class back
+                // Ensure it's truncated if button is needed
+                descContainer.classList.add('truncated');
+
                 const readMoreBtn = document.createElement('button');
                 readMoreBtn.classList.add('read-more-btn');
                 readMoreBtn.textContent = 'Read More';
-                readMoreBtn.style.display = 'inline-block'; // Make it visible
+                readMoreBtn.style.display = 'inline-block'; // Make it visible (CSS might hide by default)
 
                 // Find a suitable place in the footer (e.g., append or insert before a link)
-                 const repoLink = footer.querySelector('.repo-link');
-                 if (repoLink) {
+                const repoLink = footer.querySelector('.repo-link');
+                const repoStatus = footer.querySelector('.repo-status'); // Check for status too
+                if (repoLink) {
                      footer.insertBefore(readMoreBtn, repoLink); // Place before GitHub link
-                 } else {
-                     footer.appendChild(readMoreBtn); // Append if no link
+                 } else if (repoStatus){
+                     footer.insertBefore(readMoreBtn, repoStatus); // Place before Status
+                 }
+                  else {
+                     footer.appendChild(readMoreBtn); // Append if nothing else found
                  }
 
 
                 readMoreBtn.addEventListener('click', function() {
-                    const container = this.closest('.project-card').querySelector('.project-description');
+                    const container = this.closest('.project-card')?.querySelector('.project-description'); // Use optional chaining
+                     if (!container) return;
+
                     container.classList.toggle('truncated'); // Toggle the class
-
-                    // Update button text
                     this.textContent = container.classList.contains('truncated') ? 'Read More' : 'Read Less';
-
-                    // Optional: Recalculate carousel height if card height changes drastically
-                    // (Requires more complex carousel setup)
                 });
 
+            } else {
+                // If no button is needed, explicitly remove the truncated class
+                descContainer.classList.remove('truncated');
             }
-            // No else needed: we removed truncated class earlier if button wasn't needed
         });
     }
 
-    // Call setupReadMore initially for cards already in HTML
-    setupReadMore('.projects-grid:not(.carousel-track) .project-card'); // Target only non-carousel cards initially
+    // Call setupReadMore initially for cards already in HTML (highlighted projects)
+    // Use a more specific selector to avoid the carousel track
+    setupReadMore('.projects-grid:not(#github-projects) .project-card');
 
 
     // --- GitHub Repository Fetch & Carousel Setup ---
     const githubUsername = 'MHamdyK';
-    const repoListElement = document.getElementById('github-projects'); // This is now the carousel TRACK
+    const repoListElement = document.getElementById('github-projects'); // This is the carousel TRACK
     const loadingElement = document.getElementById('github-projects-loading');
     const carouselContainer = document.getElementById('github-carousel-container');
-    const prevButton = carouselContainer.querySelector('.carousel-button.prev');
-    const nextButton = carouselContainer.querySelector('.carousel-button.next');
-    const dotsContainer = carouselContainer.querySelector('.carousel-dots');
+    // Select buttons within the container - check if they exist first
+    const prevButton = carouselContainer?.querySelector('.carousel-button.prev');
+    const nextButton = carouselContainer?.querySelector('.carousel-button.next');
+    const dotsContainer = carouselContainer?.querySelector('.carousel-dots');
     const apiUrl = `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=12`; // Fetch more for carousel
 
     let githubRepos = []; // Store fetched repos
@@ -143,176 +162,189 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalCards = 0;
     let totalSlides = 0;
     let currentSlideIndex = 0;
-    let cardWidth = 0; // Includes margin/gap
-    let trackWidth = 0;
+    let cardWidthWithGap = 0; // Stores measured width + gap
     let resizeTimeout;
 
+    // Check if essential carousel elements exist before proceeding
+    if (!repoListElement || !loadingElement || !carouselContainer || !prevButton || !nextButton || !dotsContainer) {
+        console.error("Carousel HTML elements not found. Cannot initialize GitHub carousel.");
+        if (loadingElement) loadingElement.textContent = 'Error: Carousel structure missing in HTML.';
+        // Optionally hide the container area if elements are missing
+        if (carouselContainer) carouselContainer.style.display = 'none';
+    } else {
+        // Proceed with fetch only if elements are found
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(repos => {
+                if (loadingElement) loadingElement.style.display = 'none';
 
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(repos => {
-            if (loadingElement) loadingElement.style.display = 'none';
+                const highlightedRepoName = "Neural-Machine-Translation-Eng-Arb"; // Adjust if needed
+                githubRepos = repos.filter(repo => repo.name !== highlightedRepoName && !repo.fork); // Filter out highlighted and forks
+                totalCards = githubRepos.length;
 
-            const highlightedRepoName = "Neural-Machine-Translation-Eng-Arb"; // Example, adjust if needed
-            githubRepos = repos.filter(repo => repo.name !== highlightedRepoName && !repo.fork); // Filter out highlighted and forks
-            totalCards = githubRepos.length;
+                if (totalCards === 0) {
+                    carouselContainer.innerHTML = '<p style="text-align: center; color: var(--dim-text-color); padding: 20px;">No other public repositories found.</p>';
+                    return; // Exit if no repos
+                }
 
-            if (totalCards === 0) {
-                if (carouselContainer) carouselContainer.innerHTML = '<p style="text-align: center; color: var(--dim-text-color);">No other public repositories found.</p>';
-                return; // Exit if no repos
-            }
+                // Clear the track before adding new cards
+                repoListElement.innerHTML = '';
+                const cardAddPromises = []; // Track card processing
 
-            // Clear the track before adding new cards
-            repoListElement.innerHTML = '';
-            const fetchedRepoCards = []; // Array to hold newly created card elements
+                githubRepos.forEach((repo, index) => {
+                    // --- Create Card Element ---
+                    const card = document.createElement('div');
+                    card.classList.add('project-card', 'reveal'); // Add base and reveal classes
 
-            githubRepos.forEach(repo => {
-                const card = document.createElement('div');
-                card.classList.add('project-card', 'reveal'); // Add base and reveal classes
+                    const title = document.createElement('h4');
+                    title.textContent = repo.name.replace(/[-_]/g, ' ');
+                    card.appendChild(title);
 
-                const title = document.createElement('h4');
-                title.textContent = repo.name.replace(/[-_]/g, ' ');
-                card.appendChild(title);
+                    const descriptionContainer = document.createElement('div');
+                    descriptionContainer.classList.add('project-description'); // Initially not truncated
+                    const description = document.createElement('p');
+                    description.textContent = repo.description || 'No description provided.';
+                    descriptionContainer.appendChild(description);
+                    card.appendChild(descriptionContainer);
 
-                const descriptionContainer = document.createElement('div');
-                descriptionContainer.classList.add('project-description'); // Initially not truncated
+                    const footer = document.createElement('div');
+                    footer.classList.add('project-footer');
 
-                const description = document.createElement('p');
-                description.textContent = repo.description || 'No description provided.';
-                descriptionContainer.appendChild(description);
-                card.appendChild(descriptionContainer);
+                    // Add Tech Tags
+                    if (repo.topics && repo.topics.length > 0 || repo.language) {
+                         const tagsWrapper = document.createElement('div');
+                         tagsWrapper.classList.add('tech-tags');
+                         if (repo.topics) {
+                             repo.topics.slice(0, 4).forEach(topic => { // Limit tags
+                                 const tagSpan = document.createElement('span');
+                                 tagSpan.classList.add('tag');
+                                 tagSpan.textContent = topic;
+                                 tagsWrapper.appendChild(tagSpan);
+                             });
+                         }
+                         // Add language if it exists and isn't already a topic (case-insensitive check)
+                         if (repo.language && !(repo.topics?.map(t => t.toLowerCase()).includes(repo.language.toLowerCase()))) {
+                             const langTag = document.createElement('span');
+                             langTag.classList.add('tag');
+                             langTag.textContent = repo.language;
+                             tagsWrapper.appendChild(langTag);
+                         }
+                         // Only append wrapper if it has tags
+                         if (tagsWrapper.children.length > 0) {
+                            footer.appendChild(tagsWrapper);
+                         }
+                    }
 
-                const footer = document.createElement('div');
-                footer.classList.add('project-footer');
+                    // Add GitHub Link
+                    const link = document.createElement('a');
+                    link.href = repo.html_url;
+                    link.textContent = 'View on GitHub';
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.classList.add('repo-link');
+                    footer.appendChild(link); // Append link (Read More button will be inserted before it if needed)
 
-                 // Add Tech Tags (Example: using repo topics or language)
-                 if (repo.topics && repo.topics.length > 0) {
-                     const tagsWrapper = document.createElement('div');
-                     tagsWrapper.classList.add('tech-tags');
-                     repo.topics.slice(0, 4).forEach(topic => { // Limit tags shown
-                         const tagSpan = document.createElement('span');
-                         tagSpan.classList.add('tag');
-                         tagSpan.textContent = topic;
-                         tagsWrapper.appendChild(tagSpan);
-                     });
-                     // Add language as a tag if not already in topics
-                     if (repo.language && !repo.topics.includes(repo.language.toLowerCase())) {
-                         const langTag = document.createElement('span');
-                         langTag.classList.add('tag');
-                         langTag.textContent = repo.language;
-                         tagsWrapper.appendChild(langTag);
-                     }
-                      footer.appendChild(tagsWrapper); // Add tags wrapper to footer
-                 }
+                    card.appendChild(footer);
+                    repoListElement.appendChild(card); // Append card to the track
 
 
-                const link = document.createElement('a');
-                link.href = repo.html_url;
-                link.textContent = 'View on GitHub';
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-                link.classList.add('repo-link');
-                // Insert link after tags or append if no tags
-                 const tagsWrapper = footer.querySelector('.tech-tags');
-                 if (tagsWrapper) {
-                    footer.insertBefore(link, tagsWrapper.nextSibling); // Place after tags
-                 } else {
-                    footer.appendChild(link); // Append if no tags
-                 }
+                    // --- Process Card (Observe & Read More) ---
+                    observeElement(card); // Add to observer queue
 
-                card.appendChild(footer);
-                repoListElement.appendChild(card); // Append card to the track
-                fetchedRepoCards.push(card);
+                    // Use a minimal delay for setupReadMore to allow rendering
+                    cardAddPromises.push(new Promise(resolve => {
+                        setTimeout(() => {
+                            // Target the specific card using its index in the loop
+                            setupReadMore(`#${repoListElement.id} > .project-card:nth-child(${index + 1})`);
+                            resolve();
+                        }, 50); // 50ms delay per card
+                    }));
+                });
 
-                // --- Process each card *as it's added* ---
-                // 1. Make IntersectionObserver watch this new card for scroll reveal
-                 observeElement(card); // Add to observer queue
+                // --- Initialize Carousel after all cards are processed ---
+                Promise.all(cardAddPromises).then(() => {
+                    if (totalCards > 0) {
+                        // Use another small delay for final rendering before setup
+                        setTimeout(() => {
+                            setupCarousel();
+                             // Ensure container is visible now
+                             carouselContainer.style.visibility = 'visible';
+                             carouselContainer.style.opacity = '1'; // Optional: Fade in
+                             carouselContainer.style.transition = 'opacity 0.5s ease-in-out'; // Optional fade
+                        }, 150); // Wait briefly for cards to render
+                    }
+                });
 
-                // 2. Run Read More setup for this specific card
-                 setupReadMore(`#${repoListElement.id} > .project-card:last-child`); // Target the newly added card specifically
+            })
+            .catch(error => {
+                console.error('Error fetching GitHub repositories:', error);
+                if (loadingElement) {
+                    loadingElement.textContent = 'Failed to load repositories from GitHub.';
+                    loadingElement.style.color = '#ff6b6b';
+                }
+                 // Hide the container on error
+                if (carouselContainer) {
+                    carouselContainer.innerHTML = '<p style="text-align: center; color: var(--dim-text-color); padding: 20px;">Failed to load repositories.</p>';
+                    carouselContainer.style.visibility = 'visible'; // Make error visible
+                }
             });
+    } // End of else block (checking if elements exist)
 
-            // --- Initialize Carousel after all cards are added ---
-            if (totalCards > 0) {
-                setupCarousel();
-                 carouselContainer.style.visibility = 'visible'; // Show the carousel now
-            }
 
-        })
-        .catch(error => {
-            console.error('Error fetching GitHub repositories:', error);
-            if (loadingElement) {
-                 loadingElement.textContent = 'Failed to load repositories from GitHub.';
-                 loadingElement.style.color = '#ff6b6b';
-            }
-             if (carouselContainer) carouselContainer.style.display = 'none'; // Hide container on error
-        });
-
-    // --- Carousel Logic ---
+    // --- Carousel Logic Functions ---
 
     function getCardsPerSlide() {
         const screenWidth = window.innerWidth;
+        // Match breakpoints used in CSS for consistency
         if (screenWidth <= 768) return 1; // Mobile
         if (screenWidth <= 992) return 2; // Tablet
         return 3; // Desktop
     }
 
     function updateCarouselState() {
-        cardsPerSlide = getCardsPerSlide();
-        totalSlides = Math.ceil(totalCards / cardsPerSlide);
+        // Make sure elements exist before proceeding
+        if (!repoListElement) return;
 
-        // Get the first card's dimensions *after* it's rendered
+        cardsPerSlide = getCardsPerSlide();
+        totalSlides = cardsPerSlide > 0 ? Math.ceil(totalCards / cardsPerSlide) : 0;
+
         const firstCard = repoListElement.querySelector('.project-card');
-        if (!firstCard) return; // No cards
+        if (!firstCard) {
+            cardWidthWithGap = 0; // Reset if no cards
+            return;
+        }
 
         const cardStyle = window.getComputedStyle(firstCard);
-        const cardMargin = parseFloat(cardStyle.marginRight) + parseFloat(cardStyle.marginLeft); // Though we use gap, check margins just in case
-        const cardGap = parseFloat(window.getComputedStyle(repoListElement).gap) || 25; // Get gap from CSS
+        const trackStyle = window.getComputedStyle(repoListElement);
+        const cardGap = parseFloat(trackStyle.gap) || 0; // Get gap from track
+        const cardMargin = parseFloat(cardStyle.marginLeft) + parseFloat(cardStyle.marginRight);
 
-        // Calculate width of a single card + its gap portion
-        // cardWidth = firstCard.offsetWidth + cardMargin; // Simpler if using only gap
-        cardWidth = firstCard.offsetWidth + cardGap;
+        // Calculate the space one card takes up, including its gap
+        cardWidthWithGap = firstCard.offsetWidth + cardMargin + cardGap;
 
-
-        // Correct track width calculation based on total cards
-        trackWidth = (firstCard.offsetWidth * totalCards) + (cardGap * (totalCards -1)) ; // Total width of all cards + gaps between them
-        repoListElement.style.width = `${trackWidth}px`; // Explicitly set track width MAYBE NOT NEEDED with flex
-
-        // Clamp currentSlideIndex if layout changes reduced totalSlides
+        // Clamp currentSlideIndex to valid range
         currentSlideIndex = Math.max(0, Math.min(currentSlideIndex, totalSlides - 1));
-
     }
 
     function updateCarouselUI() {
-        if (!repoListElement || totalSlides <= 0) return; // Exit if no track or slides
+        // Check for required elements and valid state
+        if (!repoListElement || !prevButton || !nextButton || !dotsContainer || totalSlides <= 0 || cardWidthWithGap <= 0) {
+            // Optionally hide controls if state is invalid
+             if(prevButton) prevButton.style.visibility = 'hidden';
+             if(nextButton) nextButton.style.visibility = 'hidden';
+             if(dotsContainer) dotsContainer.style.visibility = 'hidden';
+            return;
+        }
 
-        // Calculate the amount to translate the track
-        // We move by 'slides', where each slide contains 'cardsPerSlide' cards
-        const slideWidth = cardWidth * cardsPerSlide; // Width of a full slide including gaps within it
-        // We need to calculate the offset based on the starting position of the slide index
-        // Offset = index * (width of 'cardsPerSlide' cards + gaps for 'cardsPerSlide' cards)
-        // A simpler approach: calculate offset based on the width of the container viewport
-         const containerWidth = repoListElement.parentElement.offsetWidth; // Width of the visible area
-
-        // Calculate translateX: move left by the width of 'currentSlideIndex' full slides
-        // Each slide moves by the width of 'cardsPerSlide' items plus their gaps.
-        // Let's use the cardWidth which includes the gap spacing calculation from updateCarouselState
-         let translateX = currentSlideIndex * cardWidth * cardsPerSlide;
-
-         // Adjust calculation slightly - need to move by index * number_of_cards_per_slide * width_of_one_card_plus_gap
-         translateX = currentSlideIndex * (cardWidth * cardsPerSlide); // This seems more direct
-         // Check boundary conditions - don't translate beyond the end
-         const maxTranslateX = trackWidth - containerWidth + (parseFloat(window.getComputedStyle(repoListElement).gap) || 25); // Max scroll left pos
-        // translateX = Math.min(translateX, maxTranslateX); // Clamp maximum translation DOESNT work correctly with slide logic
-
-        // Correct translateX: move by the index multiplied by the width of a slide (which is cardsperslide * cardwidth).
-        translateX = currentSlideIndex * (cardWidth * cardsPerSlide);
-
+        // Calculate translateX: Move left by index * number_of_cards_per_slide * width_of_one_card_plus_gap
+        // Ensure we don't multiply by zero cardsPerSlide
+        const effectiveCardsPerSlide = Math.max(1, cardsPerSlide);
+        const translateX = currentSlideIndex * effectiveCardsPerSlide * cardWidthWithGap;
 
         repoListElement.style.transform = `translateX(-${translateX}px)`;
 
@@ -322,69 +354,98 @@ document.addEventListener('DOMContentLoaded', function() {
             dot.classList.toggle('active', index === currentSlideIndex);
         });
 
-        // Update Buttons
+        // Update Buttons State
         prevButton.disabled = currentSlideIndex === 0;
         nextButton.disabled = currentSlideIndex >= totalSlides - 1;
 
-        // Hide controls if only one slide
+        // Update Controls Visibility
         const controlsShouldBeVisible = totalSlides > 1;
-        prevButton.style.display = controlsShouldBeVisible ? 'flex' : 'none';
-        nextButton.style.display = controlsShouldBeVisible ? 'flex' : 'none';
-        dotsContainer.style.display = controlsShouldBeVisible ? 'block' : 'none';
-
+        prevButton.style.visibility = controlsShouldBeVisible ? 'visible' : 'hidden';
+        nextButton.style.visibility = controlsShouldBeVisible ? 'visible' : 'hidden';
+        dotsContainer.style.visibility = controlsShouldBeVisible ? 'visible' : 'hidden';
     }
 
+    // --- Debounced Resize Handler ---
+    function handleResize() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const oldTotalSlides = totalSlides;
+            updateCarouselState(); // Recalculate sizes and slide count
+
+            // If the number of slides changed, need to rebuild dots and update UI fully
+            if (oldTotalSlides !== totalSlides) {
+                // Re-create dots if the number of slides changed
+                createDots();
+            }
+            // Always update UI after state change on resize
+            updateCarouselUI();
+        }, 250); // Debounce time
+    }
+
+    // --- Function to Create Dots ---
+    function createDots() {
+         if (!dotsContainer) return;
+         dotsContainer.innerHTML = ''; // Clear existing dots
+         if (totalSlides > 1) {
+             for (let i = 0; i < totalSlides; i++) {
+                 const dot = document.createElement('button');
+                 dot.classList.add('carousel-dot');
+                 dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                 dot.addEventListener('click', () => {
+                     currentSlideIndex = i;
+                     updateCarouselUI(); // Update UI on dot click
+                 });
+                 dotsContainer.appendChild(dot);
+             }
+         }
+    }
+
+    // --- Main Carousel Setup Function ---
     function setupCarousel() {
-        if (totalCards === 0 || !repoListElement) return;
-
-        updateCarouselState(); // Initial calculation
-
-        // Create Dots
-        dotsContainer.innerHTML = ''; // Clear existing dots
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('button');
-            dot.classList.add('carousel-dot');
-            dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-            dot.addEventListener('click', () => {
-                currentSlideIndex = i;
-                updateCarouselUI();
-            });
-            dotsContainer.appendChild(dot);
+        // Check required elements exist
+        if (totalCards === 0 || !repoListElement || !prevButton || !nextButton || !dotsContainer) {
+             console.log("Skipping carousel setup: Not enough cards or missing elements.");
+            return;
         }
 
-        // Add Button Listeners
-        prevButton.addEventListener('click', () => {
-            if (currentSlideIndex > 0) {
+        console.log("Setting up carousel..."); // Debug log
+
+        updateCarouselState(); // Initial calculation of sizes and slide count
+
+        // Create Dot Indicators
+        createDots();
+
+        // --- Add Button Listeners ---
+        // Remove potential old listeners by cloning (safer than removeEventListener)
+        const newPrevButton = prevButton.cloneNode(true);
+        prevButton.parentNode.replaceChild(newPrevButton, prevButton);
+
+        const newNextButton = nextButton.cloneNode(true);
+        nextButton.parentNode.replaceChild(newNextButton, nextButton);
+
+        // Add listeners to the *new* buttons
+        newPrevButton.addEventListener('click', () => {
+            if (currentSlideIndex > 0) { // Check boundary
                 currentSlideIndex--;
                 updateCarouselUI();
             }
         });
 
-        nextButton.addEventListener('click', () => {
-             if (currentSlideIndex < totalSlides - 1) {
+        newNextButton.addEventListener('click', () => {
+             if (currentSlideIndex < totalSlides - 1) { // Check boundary
                 currentSlideIndex++;
                 updateCarouselUI();
             }
         });
+        // --- End Button Listeners ---
 
-        // Initial UI update
+        // Initial UI state update (position, dots, buttons)
         updateCarouselUI();
 
         // Add Resize Listener (Debounced)
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                 const oldSlidesPerPage = cardsPerSlide;
-                 updateCarouselState(); // Recalculate sizes and slide count
-                 // If the number of slides per page changed, we might need to recreate dots
-                 if (oldSlidesPerPage !== cardsPerSlide || dotsContainer.children.length !== totalSlides) {
-                     setupCarousel(); // Re-run full setup if layout significantly changes
-                 } else {
-                    updateCarouselUI(); // Just update position and controls if layout is similar
-                 }
-
-            }, 250); // Wait 250ms after resize stops
-        });
+        window.removeEventListener('resize', handleResize); // Ensure no duplicates
+        window.addEventListener('resize', handleResize);
     }
+
 
 }); // End of DOMContentLoaded listener

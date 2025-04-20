@@ -477,26 +477,25 @@ li::before {
 .carousel-button.next { right: 5px; }
 
 /* Carousel Dot Indicators */
-.carousel-dots {
-    text-align: center;
-    margin-top: 25px;
-    padding-bottom: 10px; /* Ensure space below */
-}
-/* Carousel Dot Indicators */
-.carousel-dots {
-    text-align: center;
-    margin-top: 25px;
-    padding-bottom: 10px; /* Ensure space below */
-    position: relative; /* Ensure dots aren't overlapped by track padding adjustments */
-    z-index: 5;
-}
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    margin: 0 6px;
+    background-color: var(--carousel-dot-inactive-bg);
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
 .carousel-dot:hover {
     transform: scale(1.2);
 }
 .carousel-dot.active {
     background-color: var(--carousel-dot-active-bg);
     transform: scale(1.3);
-}
+  }
 
 /* ========== END GITHUB CAROUSEL STYLES ========== */
 
@@ -654,3 +653,19 @@ li::before {
     .carousel-button.prev { left: 1px; }
     .carousel-button.next { right: 1px; }
 }
+/* --- Force carousel cards to all match the tallest --- */
+#github-projects {
+    display: flex;            /* already set */
+    align-items: stretch;     /* stretch every item to the track’s height */ 
+  }
+#github-projects .project-card {
+align-self: stretch;      /* ensure each child fills the container cross‑axis */ 
+height: auto !important;   /* override the default 100% so auto sizing kicks in */ 
+}
+#github-projects.carousel-track {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.carousel-button.prev { left: 0; }
+.carousel-button.next { right: 0; }

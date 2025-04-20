@@ -669,3 +669,11 @@ height: auto !important;   /* override the default 100% so auto sizing kicks in 
 
 .carousel-button.prev { left: 0; }
 .carousel-button.next { right: 0; }
+/* ——————— Center the carousel pagination dots ——————— */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  

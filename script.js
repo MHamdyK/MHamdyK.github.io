@@ -235,27 +235,21 @@ function setupReadMore(selector = '.project-card') {
                     observeElement(card); // Add to observer queue
 
                     // Use a minimal delay for setupReadMore to allow rendering
-                    cardAddPromises.push(new Promise(resolve => {
-                        setTimeout(() => {
-                            // Target the specific card using its index in the loop
-                            setupReadMore(`#${repoListElement.id} > .project-card:nth-child(${index + 1})`);
-                            resolve();
-                        }, 50); // 50ms delay per card
-                    }));
+                    cardAddPromises.push(Promise.resolve());
                 });
 
                 // --- Initialize Carousel after all cards are processed ---
                 Promise.all(cardAddPromises).then(() => {
-                    if (totalCards > 0) {
-                        // Use another small delay for final rendering before setup
-                        setTimeout(() => {
-                            setupCarousel();
-                             // Ensure container is visible now
-                             carouselContainer.style.visibility = 'visible';
-                             carouselContainer.style.opacity = '1'; // Optional: Fade in
-                             carouselContainer.style.transition = 'opacity 0.5s ease-in-out'; // Optional fade
-                        }, 150); // Wait briefly for cards to render
-                    }
+                    // 1️⃣ Initialize Read More on all carousel cards at once
+                    setupReadMore('#github-projects .project-card');
+                  
+                    // 2️⃣ Then set up the carousel UI
+                    setupCarousel();
+                  
+                    // 3️⃣ Finally, reveal the container
+                    carouselContainer.style.visibility = 'visible';
+                    carouselContainer.style.opacity = '1';
+                    carouselContainer.style.transition = 'opacity 0.5s ease-in-out';
                 });
 
             })

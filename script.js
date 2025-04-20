@@ -57,69 +57,71 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- "Read More" Functionality ---
-    function setupReadMore(containerSelector = '.project-card') {
-        const cards = document.querySelectorAll(containerSelector);
-      
-        cards.forEach(card => {
-          const descContainer = card.querySelector('.project-description');
-          const paragraph = descContainer?.querySelector('p');
-          const footer = card.querySelector('.project-footer');
-          if (!paragraph || !footer || !descContainer) return;
-      
-          // Remove any existing button (for re-initialization)
-          footer.querySelectorAll('.read-more-btn').forEach(btn => btn.remove());
-      
-          // Measure whether we need a Read More button
-          const wasTruncated = descContainer.classList.contains('truncated');
-          descContainer.classList.remove('truncated');
-          void paragraph.offsetHeight; // force reflow
-          const fullHeight = paragraph.scrollHeight;
-          const maxHeightStyle = window.getComputedStyle(descContainer).maxHeight;
-          const maxHeight = parseFloat(maxHeightStyle) || 100;
-          const needsBtn = fullHeight > maxHeight + 10;
-          if (wasTruncated) descContainer.classList.add('truncated');
-      
-          if (!needsBtn) {
-            // If it fits, ensure it's fully shown and skip button
-            descContainer.classList.remove('truncated');
-            return;
-          }
-      
-          // Otherwise, add the button and default to collapsed
-          descContainer.classList.add('truncated');
-          const btn = document.createElement('button');
-          btn.className = 'read-more-btn';
-          btn.textContent = 'Read More';
-      
-          // Insert button before GitHub link if present, else append
-          const repoLink = footer.querySelector('.repo-link');
-          if (repoLink) footer.insertBefore(btn, repoLink);
-          else footer.appendChild(btn);
-      
-          // Accordion-style toggle: only one open at a time
-          btn.addEventListener('click', () => {
-            const isClosed = descContainer.classList.contains('truncated');
-      
-            // 1) Close all cards
-            cards.forEach(c => {
-              const d = c.querySelector('.project-description');
-              const b = c.querySelector('.read-more-btn');
-              d.classList.add('truncated');
-              if (b) b.textContent = 'Read More';
-            });
-      
-            // 2) If this was closed, open it
-            if (isClosed) {
-              descContainer.classList.remove('truncated');
-              btn.textContent = 'Read Less';
-            }
-          });
+    /**
+ * Adds a Read More/Read Less toggle to each project card in a container.
+ * Ensures only one card can be expanded at once (accordion style).
+ * @param {string} selector CSS selector for the cards to target
+ */
+function setupReadMore(selector = '.project-card') {
+    const cards = document.querySelectorAll(selector);
+    cards.forEach(card => {
+      const descBox  = card.querySelector('.project-description');
+      const paragraph = descBox?.querySelector('p');
+      const footer    = card.querySelector('.project-footer');
+      if (!descBox || !paragraph || !footer) return;
+  
+      // Remove old button if re-initializing
+      footer.querySelectorAll('.read-more-btn').forEach(old => old.remove());
+  
+      // Determine if we need a button
+      const wasTruncated = descBox.classList.contains('truncated');
+      descBox.classList.remove('truncated');
+      void paragraph.offsetHeight; // force reflow
+      const fullHeight = paragraph.scrollHeight;
+      const maxStyle   = window.getComputedStyle(descBox).maxHeight;
+      const maxH       = parseFloat(maxStyle) || 100;
+      const needsBtn   = fullHeight > maxH + 10;
+      if (wasTruncated) descBox.classList.add('truncated');
+  
+      if (!needsBtn) {
+        // No toggle needed; show full text
+        descBox.classList.remove('truncated');
+        return;
+      }
+  
+      // Add button and default to truncated
+      descBox.classList.add('truncated');
+      const btn = document.createElement('button');
+      btn.className = 'read-more-btn';
+      btn.textContent = 'Read More';
+  
+      // Place button before GitHub link if present
+      const repoLink = footer.querySelector('.repo-link');
+      if (repoLink) footer.insertBefore(btn, repoLink);
+      else footer.appendChild(btn);
+  
+      // Accordion-style click handler
+      btn.addEventListener('click', () => {
+        const wasClosed = descBox.classList.contains('truncated');
+        // Collapse all
+        cards.forEach(c => {
+          const d = c.querySelector('.project-description');
+          const b = c.querySelector('.read-more-btn');
+          d.classList.add('truncated');
+          if (b) b.textContent = 'Read More';
         });
-    }
+        // Expand this one if it was closed
+        if (wasClosed) {
+          descBox.classList.remove('truncated');
+          btn.textContent = 'Read Less';
+        }
+      });
+    });
+}
 
     // Call setupReadMore initially for cards already in HTML (highlighted projects)
     // Use a more specific selector to avoid the carousel track
-    setupReadMore('#github-projects .project-card');
+    setupReadMore('.projects-grid > .project-card');
 
 
     // --- GitHub Repository Fetch & Carousel Setup ---
